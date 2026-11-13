@@ -89,8 +89,27 @@ small{color:var(--mut)}
 .tm button{flex:none;width:64px;height:84px;padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;opacity:.6;background:var(--ph)}
 .tm .on{border-color:var(--ink);opacity:1}
 .tm img{display:block;width:100%;height:100%;object-fit:cover}
-.pi h1{margin:0 0 4px;font-size:24px;line-height:1.4}
-.pi .pr{justify-content:flex-start;font-size:18px;margin-top:8px}
+.pi h1{margin:0 0 6px;font-size:34px;line-height:1.2;font-weight:700}
+.pi .pr{justify-content:flex-start;font-size:20px;margin-top:8px}
+.sn{display:block;margin-top:6px}
+.lb{margin:18px 0 6px;font-size:13px;color:var(--mut)}
+.pi .op button{min-width:52px;height:40px;font-size:14px}
+.q2{display:inline-flex;align-items:center;height:46px;border:1px solid var(--mut)}
+.q2 button{width:46px;height:100%;border:0;background:none;font-size:20px}
+.q2 span{min-width:46px;text-align:center;font-size:15px}
+.pi .ab{height:48px;margin-top:20px}
+.pi .add{height:48px;margin-top:14px}
+.shr{display:inline-flex;align-items:center;gap:8px;margin-top:22px;border:0;background:none;padding:6px 0;font-weight:500}
+.sc{margin-top:18px;border-block:1px solid var(--ln)}
+.sc summary{display:flex;align-items:center;gap:12px;padding:16px 0;cursor:pointer;list-style:none;font-size:17px}
+.sc summary::-webkit-details-marker{display:none}
+.sc summary b{flex:1}
+.sc .cv{transition:transform .2s}
+.sc[open] .cv{transform:rotate(180deg)}
+.scw{overflow-x:auto;padding-bottom:14px}
+.scw table{border-collapse:collapse;width:100%;font-size:14px}
+.scw th,.scw td{border:1px solid var(--ln);padding:8px 10px;text-align:center;white-space:nowrap}
+.scw th{background:var(--sf);font-weight:700}
 .pi .mt{color:#b3261e;font-weight:700;text-align:start;padding:14px 0}
 .pi .op{justify-content:flex-start}
 .ck #root>:not(#ckv){display:none!important}
@@ -301,7 +320,7 @@ function upd(){grid();drawer();$("#cn").textContent=Object.values(cart).reduce((
 const A={
  tab(v){if(view!="h"){location.hash="";route()}cat=v;pg=0;tabs();grid();document.body.classList.remove("menu");const h=$("#ph"),t=h.getBoundingClientRect().top;if(t<0||t>innerHeight*.35)h.scrollIntoView({behavior:"smooth"})},
  opt(v){const j=v.indexOf("|"),i=v.slice(0,j),o=v.slice(j+1);sel[i]=sel[i]==o?"":o;grid();if(!$("#pv").hidden)pdp(find(i))},
- add(v){const p=find(v);if(opts(p).length&&!sel[v])return toast("اختار المقاس أو الدرجة الأول");const k=v+"|"+(sel[v]||"");cart[k]=Math.min((cart[k]||0)+1,20);savec();upd();toast("اتضاف للسلة");const b=document.querySelector('.ab[data-v="'+v+'"]');if(b){void b.offsetWidth;b.classList.add("ok");clearTimeout(okT);okT=setTimeout(()=>{const x=document.querySelector('.ab[data-v="'+v+'"]');if(x)x.classList.remove("ok")},1500)}},
+ add(v){const p=find(v);if(opts(p).length&&!sel[v])return toast("اختار المقاس أو الدرجة الأول");const k=v+"|"+(sel[v]||"");cart[k]=Math.min((cart[k]||0)+($("#pv").hidden?1:pq),20);savec();upd();toast("اتضاف للسلة");const b=document.querySelector('.ab[data-v="'+v+'"]');if(b){void b.offsetWidth;b.classList.add("ok");clearTimeout(okT);okT=setTimeout(()=>{const x=document.querySelector('.ab[data-v="'+v+'"]');if(x)x.classList.remove("ok")},1500)}},
  qty(v){const j=v.lastIndexOf("|"),k=v.slice(0,j),n=(cart[k]||0)+ +v.slice(j+1);if(n>0)cart[k]=Math.min(n,20);else delete cart[k];savec();upd()}
 };
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.v)});
@@ -344,10 +363,12 @@ function checkout(){
  v.innerHTML=`<div class="cw"><div class="cl"><main class="cm"><a class="logo" href="#">${esc(D.name)}</a><h3>التواصل</h3><input id="ce" type="email" placeholder="البريد الإلكتروني (اختياري)" autocomplete="email"><label class="chk"><input type="checkbox"> ابعتلي الجديد والعروض على الإيميل</label><h3>التوصيل</h3><select aria-label="الدولة"><option>مصر</option></select><div class="two"><input id="fn" placeholder="الاسم الأول" autocomplete="given-name"><input id="ln2" placeholder="الاسم الأخير" autocomplete="family-name"></div><input id="fa" placeholder="العنوان" autocomplete="address-line1"><input id="fb" placeholder="شقة، دور، علامة مميزة (اختياري)"><div class="two"><input id="fc" placeholder="المدينة"><select id="fg" aria-label="المحافظة"><option value="">المحافظة</option>${GOV.map(g=>`<option>${g}</option>`).join("")}</select></div><div class="two"><input id="fz" placeholder="الرمز البريدي (اختياري)"><input id="fp" placeholder="رقم الموبايل" inputmode="tel" autocomplete="tel"></div><label class="chk"><input type="checkbox" id="sv"> احفظ بياناتي للمرة الجاية</label><h3>طريقة الشحن</h3><div class="opt on"><span><b>شحن عادي</b><br><small>${esc(D.eta||"من 3 لـ 5 أيام عمل")}</small></span><b id="sp"></b></div><h3>الدفع</h3><small>كل المعاملات آمنة.</small><label class="opt"><input type="radio" name="pm" value="cod" checked><b>الدفع عند الاستلام (COD)</b></label><label class="opt"><input type="radio" name="pm" value="card"><b>بطاقة بنكية (فيزا / ماستركارد / ميزة)</b></label><div id="cd" hidden><div class="cc" id="cc" data-b=""><div class="cc-in"><div class="cc-f"><i class="cc-c"></i><svg class="cc-x" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 7a7 7 0 0 1 0 10M12 4.5a11 11 0 0 1 0 15M16 2a15 15 0 0 1 0 20"/></svg><b class="cc-bn" id="ccb">CARD</b><p class="cc-n" id="ccn">•••• •••• •••• ••••</p><p class="cc-l">VALID THRU</p><p class="cc-d" id="ccd">MM/YY</p><p class="cc-m" id="ccm">FULL NAME</p><span class="cc-lg" id="ccl"></span></div><div class="cc-k"><div class="cc-s"></div><div class="cc-g"></div><div class="cc-v" id="ccc">•••</div></div></div></div><input id="kn" dir="ltr" inputmode="numeric" autocomplete="cc-number" placeholder="رقم البطاقة" maxlength="19"><input id="km" autocomplete="cc-name" placeholder="الاسم على البطاقة"><div class="two"><input id="ke" dir="ltr" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5"><input id="kc" dir="ltr" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV" maxlength="4"></div><small>بيانات الكارت بتتبعت لبوابة الدفع بس، ومش بتتحفظ عندنا ولا بتتبعت على واتساب.</small></div><h3>عنوان الفواتير</h3><label class="opt"><input type="radio" name="bl" value="1" checked> نفس عنوان الشحن</label><label class="opt"><input type="radio" name="bl" value="2"> استخدام عنوان فواتير مختلف</label><input id="bi" placeholder="عنوان الفواتير بالتفصيل" hidden><p id="em" class="er" role="alert"></p><div class="pbw"><button class="btn" data-a="pay" aria-label="إتمام الطلب"><span class="stars"></span><span class="background"></span><span class="order">إتمام الطلب</span><span class="done">تم</span><span class="car-container"><span class="car-part1"></span><span class="car-part2"></span><span class="wheels"></span><span class="details"></span></span><span class="package-container"><span class="package"></span><span class="package-details"></span><span class="package-text">!</span></span></button></div></main></div><div class="cr"><aside class="cs"><div id="sl"></div><div class="dc"><input id="dk" placeholder="كود الخصم" value="${esc(code)}"><button class="ap" data-a="ap">تطبيق</button></div><small id="dm"></small><div id="tl"></div></aside></div></div>`;
  IDS.forEach(i=>{if(inf[i])$("#"+i).value=inf[i]});sum();
 }
-let view="",homeY=0,pid=0,gi=0;
+let view="",homeY=0,pid=0,gi=0,pq=1;
+const abtn=p=>`<button class="ab" data-a="add" data-v="${p.id}"><span class="ab__t">أضف للسلة</span><span class="ab__i"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" class="svg p" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" class="svg c" aria-hidden="true"><polyline points="5 12 10 17 19 7"></polyline></svg></span></button>`;
+const szc=t=>{const r=t.split("\n").map(l=>l.trim()).filter(Boolean).map(l=>l.split(/[,،|\t]/).map(c=>c.trim()));return r.length?`<details class="sc"><summary><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" aria-hidden="true"><path d="M3 17 17 3l4 4L7 21z"/><path d="m7 13 2 2m1-5 2 2m1-5 2 2"/></svg><b>جدول المقاسات</b><svg class="cv" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><div class="scw"><table>${r.map((c,i)=>`<tr>${c.map(x=>i?`<td>${esc(x)}</td>`:`<th>${esc(x)}</th>`).join("")}</tr>`).join("")}</table></div></details>`:""};
 function pdp(p){
- pid=p.id;const im=imgs(p),o=opts(p),g=Math.min(gi,Math.max(0,im.length-1));
- $("#pv").innerHTML=`<a class="bk" href="#">→ رجوع للمتجر</a><div class="pd2"><div class="gl"><div class="mn"${im.length>1?` data-a="gi" data-v="${(g+1)%im.length}"`:""}>${im.length?`<img src="${esc(src(im[g]))}" alt="${esc(p.n)}">`:`<span>${esc(p.n[0])}</span>`}${p.out?"<em>نفدت الكمية</em>":""}</div>${im.length>1?`<div class="tm">${im.map((u,i)=>`<button data-a="gi" data-v="${i}" class="${i==g?"on":""}" aria-label="صورة ${i+1}"><img src="${esc(src(u))}" alt=""></button>`).join("")}</div>`:""}</div><div class="pi"><h1>${esc(p.n)}</h1><small>${esc(p.c)}</small><div class="pr${p.o?" s":""}"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>${o.length?`<div class="op">${o.map(x=>`<button data-a="opt" data-v="${p.id}|${esc(x)}" class="${sel[p.id]==x?"on":""}">${esc(x)}</button>`).join("")}</div>`:""}${p.out?`<p class="mt">نفدت الكمية</p>`:`<button class="add pri" data-a="add" data-v="${p.id}">أضف للسلة</button>`}</div></div>`;
+ pid=p.id;const im=imgs(p),o=opts(p),g=Math.min(gi,Math.max(0,im.length-1)),z=(D.sz||{})[p.id];
+ $("#pv").innerHTML=`<a class="bk" href="#">→ رجوع للمتجر</a><div class="pd2"><div class="gl"><div class="mn"${im.length>1?` data-a="gi" data-v="${(g+1)%im.length}"`:""}>${im.length?`<img src="${esc(src(im[g]))}" alt="${esc(p.n)}">`:`<span>${esc(p.n[0])}</span>`}${p.out?"<em>نفدت الكمية</em>":""}</div>${im.length>1?`<div class="tm">${im.map((u,i)=>`<button data-a="gi" data-v="${i}" class="${i==g?"on":""}" aria-label="صورة ${i+1}"><img src="${esc(src(u))}" alt=""></button>`).join("")}</div>`:""}</div><div class="pi"><h1>${esc(p.n)}</h1><div class="pr${p.o?" s":""}"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div><small class="sn">الشحن بيتحسب في صفحة الدفع.</small>${o.length?`<div class="lb">المقاس</div><div class="op">${o.map(x=>`<button data-a="opt" data-v="${p.id}|${esc(x)}" class="${sel[p.id]==x?"on":""}">${esc(x)}</button>`).join("")}</div>`:""}${p.out?`<p class="mt">نفدت الكمية</p>`:`<div class="lb">الكمية</div><div class="q2"><button data-a="qn" data-v="-1" aria-label="نقص">−</button><span id="pqn">${pq}</span><button data-a="qn" data-v="1" aria-label="زيادة">+</button></div>${abtn(p)}<button class="add pri" data-a="buy" data-v="${p.id}">اشتري الآن</button>`}<button class="shr" data-a="sh"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 15V4m0 0L8 8m4-4 4 4M5 13v6h14v-6"/></svg>مشاركة</button>${z?szc(z):""}</div></div>`;
  document.title=p.n+" | "+D.name}
 function route(){
  const h=location.hash,m=/^#p\/(\d+)$/.exec(h),ck=h=="#checkout"&&(lines().length>0||!!done),p=!ck&&m?find(m[1]):null,v=ck?"c":p?"p"+p.id:"h";
@@ -357,7 +378,7 @@ function route(){
  document.body.classList.toggle("ck",ck);$("#ckv").hidden=!ck;
  document.body.classList.toggle("pd",!!p);$("#pv").hidden=!p;
  if(ck)checkout();
- if(p){if(pid!=p.id)gi=0;pdp(p)}else{$("#pv").innerHTML="";document.title=D.name}
+ if(p){if(pid!=p.id){gi=0;pq=1}pdp(p)}else{$("#pv").innerHTML="";document.title=D.name}
  scrollTo(0,v=="h"?homeY:0);
 }
 Object.assign(A,{
@@ -389,7 +410,7 @@ Object.assign(A,{
  }
 });
 document.addEventListener("change",e=>{if(e.target.name=="bl")$("#bi").hidden=e.target.value!="2";if(e.target.id=="fg")sum()});
-Object.assign(A,{gi(v){gi=+v;pdp(find(pid))},rm(v){delete cart[v];savec();upd();toast("اتحذف من السلة")}});
+Object.assign(A,{gi(v){gi=+v;pdp(find(pid))},qn(v){pq=Math.max(1,Math.min(20,pq+ +v));$("#pqn").textContent=pq},buy(v){const p=find(v);if(opts(p).length&&!sel[v])return toast("اختار المقاس أو الدرجة الأول");A.add(v);A.go()},sh(){const u=location.href;if(navigator.share)navigator.share({title:document.title,url:u}).catch(()=>{});else if(navigator.clipboard)navigator.clipboard.writeText(u).then(()=>toast("اتنسخ رابط المنتج"))},rm(v){delete cart[v];savec();upd();toast("اتحذف من السلة")}});
 const PAY_URL="";
 const BR={visa:{n:"VISA",re:/^4/,len:[16]},mc:{n:"MASTERCARD",re:/^(5[1-5]|222[1-9]|22[3-9]\d|2[3-6]\d\d|27[01]\d|2720)/,len:[16]},meeza:{n:"MEEZA",re:/^5078/,len:[16]},amex:{n:"AMEX",re:/^3[47]/,len:[15]}};
 const LG={mc:`<svg width="40" height="40" viewBox="0 0 48 48" aria-hidden="true"><path fill="#ff9800" d="M32 10A14 14 0 1 0 32 38A14 14 0 1 0 32 10Z"/><path fill="#d50000" d="M16 10A14 14 0 1 0 16 38A14 14 0 1 0 16 10Z"/><path fill="#ff3d00" d="M18,24c0,4.755,2.376,8.95,6,11.48c3.624-2.53,6-6.725,6-11.48s-2.376-8.95-6-11.48C20.376,15.05,18,19.245,18,24z"/></svg>`,visa:`<b class="vz">VISA</b>`,meeza:`<b class="mz">ميزة</b>`,amex:`<b class="ax">AMEX</b>`};

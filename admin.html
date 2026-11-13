@@ -4,7 +4,7 @@
 *,*::before,*::after{box-sizing:inherit}
 [hidden]{display:none!important}
 body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.7 "IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif}
-button,input,select{font:inherit;color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 a{color:inherit}
@@ -31,7 +31,7 @@ h2{margin:26px 0 10px;display:flex;justify-content:space-between;align-items:cen
 .sts b{display:block;color:var(--ink);font-size:22px;line-height:1.4}
 .fm{display:grid;gap:10px}
 .fm label{display:grid;gap:3px;font-size:13px;color:var(--mut)}
-input,select{width:100%;padding:8px 10px;border:1px solid var(--ln);border-radius:0;background:var(--bg)}
+input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--ln);border-radius:0;background:var(--bg)}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .row>div{flex:1 1 140px}
@@ -66,7 +66,7 @@ function shell(){
  R.innerHTML=`<header><div class="w hd"><span class="logo">${esc(S.name)}</span><nav class="nav">${Object.entries(TABS).map(([k,v])=>`<button class="${k==tab?"on":""}" data-a="tab" data-v="${k}">${v}${k=="or"&&nn()?` (${nn()})`:""}</button>`).join("")}</nav><button class="b" data-a="lo">خروج</button></div></header><main class="w" id="bd" style="padding-bottom:60px"></main>`;body();
 }
 const body=()=>{$("#bd").innerHTML=V[tab]()};
-const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" value="${esc(ed.n)}"></label><div class="g2"><label>القسم<select id="ic">${S.cats.map(c=>`<option${c==ed.c?" selected":""}>${esc(c)}</option>`).join("")}</select></label><label>السعر (جنيه)<input id="ip" type="number" inputmode="numeric" min="1" value="${esc(ed.p)}"></label></div><div class="g2"><label>السعر قبل الخصم (اختياري)<input id="io" type="number" inputmode="numeric" min="0" value="${ed.o||""}"></label><label>المقاسات أو الدرجات (اختياري)<input id="iz" placeholder="S, M, L" value="${esc(ed.opt)}"></label></div><label>صور المنتج (اختار أكتر من صورة، والأولى هي الرئيسية)<input id="ii" type="file" accept="image/*" multiple></label><div id="pv" class="row">${pvh()}</div><div class="row"><button class="b p" id="spb" data-a="sp">حفظ المنتج</button><button class="b" data-a="cc">إلغاء</button></div></div>`;
+const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" value="${esc(ed.n)}"></label><div class="g2"><label>القسم<select id="ic">${S.cats.map(c=>`<option${c==ed.c?" selected":""}>${esc(c)}</option>`).join("")}</select></label><label>السعر (جنيه)<input id="ip" type="number" inputmode="numeric" min="1" value="${esc(ed.p)}"></label></div><div class="g2"><label>السعر قبل الخصم (اختياري)<input id="io" type="number" inputmode="numeric" min="0" value="${ed.o||""}"></label><label>المقاسات أو الدرجات (اختياري)<input id="iz" placeholder="S, M, L" value="${esc(ed.opt)}"></label></div><label>صور المنتج (اختار أكتر من صورة، والأولى هي الرئيسية)<input id="ii" type="file" accept="image/*" multiple></label><div id="pv" class="row">${pvh()}</div><label>جدول المقاسات (اختياري، كل سطر صف والخانات بفاصلة)<textarea id="isz" rows="5" dir="auto" placeholder="المقاس,الطول,العرض&#10;S,100,38&#10;M,102,40">${esc(ed.sz)}</textarea></label><div class="row"><button class="b p" id="spb" data-a="sp">حفظ المنتج</button><button class="b" data-a="cc">إلغاء</button></div></div>`;
 const V={
  or(){
   const day=new Date().toDateString(),ok=O.filter(o=>o.status!="cancel"),td=ok.filter(o=>new Date(o.created_at).toDateString()==day),sum=a=>a.reduce((s,o)=>s+o.total,0);
@@ -82,19 +82,20 @@ const A={
  tt(){const t=$("#tk").value.trim(),c=$("#tc").value.trim();if(!t||!c)return toast("اكتب التوكن والـ Chat ID");fetch("https://api.telegram.org/bot"+t+"/sendMessage",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({chat_id:c,text:"✅ تليجرام شغال مع "+S.name})}).then(r=>r.json()).then(j=>toast(j.ok?"اتبعتت رسالة تجريبية":"مشكلة: "+(j.description||""))).catch(()=>toast("مقدرتش أوصل لتليجرام"))},
  async lo(){await db.auth.signOut();login()},
  tab(v){tab=v;ed=null;arm=null;shell()},
- nw(){ed={id:0,n:"",c:S.cats[0]||"",p:"",o:0,opt:"",img:"",l:[],out:false};blob=null;body()},
- edit(v){ed={...find(v)};ed.l=IM(ed.img).map(u=>({u}));blob=null;body();scrollTo(0,0)},
+ nw(){ed={id:0,n:"",c:S.cats[0]||"",p:"",o:0,opt:"",img:"",l:[],sz:"",out:false};blob=null;body()},
+ edit(v){ed={...find(v)};ed.l=IM(ed.img).map(u=>({u}));ed.sz=(S.sz||{})[ed.id]||"";blob=null;body();scrollTo(0,0)},
  cc(){ed=null;blob=null;body()},
  ri(v){ed.l.splice(+v,1);$("#pv").innerHTML=pvh()},
  mi(v){const[x]=ed.l.splice(+v,1);ed.l.unshift(x);$("#pv").innerHTML=pvh()},
  async sp(){
-  const n=$("#in").value.trim(),p=+$("#ip").value;if(!n||!(p>0))return toast("اكتب اسم المنتج وسعره");
+  const n=$("#in").value.trim(),p=+$("#ip").value,z=$("#isz").value.trim();if(!n||!(p>0))return toast("اكتب اسم المنتج وسعره");
   const b=$("#spb");b.disabled=true;
   try{
    const urls=[];for(const x of ed.l){if(x.b){const path=Date.now()+"-"+urls.length+".jpg",u=await db.storage.from("products").upload(path,x.b,{contentType:"image/jpeg"});if(u.error)throw u.error;urls.push(db.storage.from("products").getPublicUrl(path).data.publicUrl)}else urls.push(x.u)}
    const img=urls.length>1?JSON.stringify(urls):(urls[0]||"");
-   const row={n,c:$("#ic").value,p,o:+$("#io").value||0,opt:$("#iz").value.trim(),img,out:!!ed.out},r=ed.id?await db.from("products").update(row).eq("id",ed.id):await db.from("products").insert(row);
+   const row={n,c:$("#ic").value,p,o:+$("#io").value||0,opt:$("#iz").value.trim(),img,out:!!ed.out},r=ed.id?await db.from("products").update(row).eq("id",ed.id).select("id").single():await db.from("products").insert(row).select("id").single();
    if(r.error)throw r.error;
+   const zi=r.data.id,zo=(S.sz||{})[zi]||"";if(z!==zo){S.sz=S.sz||{};if(z)S.sz[zi]=z;else delete S.sz[zi];await push()}
    ed=null;blob=null;await pull();body();toast("اتحفظ المنتج");
   }catch(x){b.disabled=false;toast("مشكلة: "+x.message)}
  },
