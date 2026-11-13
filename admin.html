@@ -48,6 +48,8 @@ const GOV="القاهرة,الجيزة,الإسكندرية,القليوبية,�
 const ST={new:"جديد",done:"اتسلّم",cancel:"ملغي"},TABS={or:"الطلبات",pr:"المنتجات",sh:"الشحن",st:"الإعدادات"};
 const db=SB_URL&&SB_KEY&&window.supabase?supabase.createClient(SB_URL,SB_KEY):null;
 let S={name:"لمسة",wa:"",note:"",ship:60,sg:{},free:0,eta:"من 3 لـ 5 أيام عمل",codes:{},cats:[]},P=[],O=[],tab="or",ed=null,arm=null,blob=null,tt;
+const IM=v=>{if(!v)return[];if(v[0]=="[")try{return JSON.parse(v)}catch(e){}return[v]};
+const pvh=()=>ed.l.map((x,i)=>`<div style="position:relative"><img class="th" src="${esc(x.u)}" alt=""><button class="b x" data-a="ri" data-v="${i}" aria-label="حذف الصورة" style="position:absolute;top:0;inset-inline-end:0;padding:0 7px">×</button>${i?`<button class="b" data-a="mi" data-v="${i}" style="padding:0 7px;font-size:12px">★ رئيسية</button>`:`<small>الرئيسية</small>`}</div>`).join("");
 const find=i=>P.find(x=>x.id==i),nn=()=>O.filter(o=>o.status=="new").length;
 function toast(m){let t=$("#ts");if(!t){t=document.createElement("div");t.id="ts";t.setAttribute("role","status");document.body.append(t)}t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>{t.hidden=true},2800)}
 async function pull(){
@@ -63,13 +65,13 @@ function shell(){
  R.innerHTML=`<header><div class="w hd"><span class="logo">${esc(S.name)}</span><nav class="nav">${Object.entries(TABS).map(([k,v])=>`<button class="${k==tab?"on":""}" data-a="tab" data-v="${k}">${v}${k=="or"&&nn()?` (${nn()})`:""}</button>`).join("")}</nav><button class="b" data-a="lo">خروج</button></div></header><main class="w" id="bd" style="padding-bottom:60px"></main>`;body();
 }
 const body=()=>{$("#bd").innerHTML=V[tab]()};
-const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" value="${esc(ed.n)}"></label><div class="g2"><label>القسم<select id="ic">${S.cats.map(c=>`<option${c==ed.c?" selected":""}>${esc(c)}</option>`).join("")}</select></label><label>السعر (جنيه)<input id="ip" type="number" inputmode="numeric" min="1" value="${esc(ed.p)}"></label></div><div class="g2"><label>السعر قبل الخصم (اختياري)<input id="io" type="number" inputmode="numeric" min="0" value="${ed.o||""}"></label><label>المقاسات أو الدرجات (اختياري)<input id="iz" placeholder="S, M, L" value="${esc(ed.opt)}"></label></div><label>صورة المنتج<input id="ii" type="file" accept="image/*"></label><div id="pv">${ed.img?`<img class="th" src="${esc(ed.img)}" alt="">`:""}</div><div class="row"><button class="b p" id="spb" data-a="sp">حفظ المنتج</button><button class="b" data-a="cc">إلغاء</button></div></div>`;
+const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" value="${esc(ed.n)}"></label><div class="g2"><label>القسم<select id="ic">${S.cats.map(c=>`<option${c==ed.c?" selected":""}>${esc(c)}</option>`).join("")}</select></label><label>السعر (جنيه)<input id="ip" type="number" inputmode="numeric" min="1" value="${esc(ed.p)}"></label></div><div class="g2"><label>السعر قبل الخصم (اختياري)<input id="io" type="number" inputmode="numeric" min="0" value="${ed.o||""}"></label><label>المقاسات أو الدرجات (اختياري)<input id="iz" placeholder="S, M, L" value="${esc(ed.opt)}"></label></div><label>صور المنتج (اختار أكتر من صورة، والأولى هي الرئيسية)<input id="ii" type="file" accept="image/*" multiple></label><div id="pv" class="row">${pvh()}</div><div class="row"><button class="b p" id="spb" data-a="sp">حفظ المنتج</button><button class="b" data-a="cc">إلغاء</button></div></div>`;
 const V={
  or(){
   const day=new Date().toDateString(),ok=O.filter(o=>o.status!="cancel"),td=ok.filter(o=>new Date(o.created_at).toDateString()==day),sum=a=>a.reduce((s,o)=>s+o.total,0);
   return `<div class="sts"><div class="cd">طلبات جديدة<b>${nn()}</b></div><div class="cd">طلبات النهاردة<b>${td.length}</b></div><div class="cd">مبيعات النهاردة<b>${f(sum(td))}</b></div><div class="cd">إجمالي المبيعات<b>${f(sum(ok))}</b></div></div><h2>الطلبات</h2>`+(O.map(o=>`<div class="cd"><div class="row"><b>#${o.id} ${esc(o.name)}</b><small style="flex:1">${new Date(o.created_at).toLocaleString("ar-EG")}</small><select data-s="${o.id}" aria-label="حالة الطلب">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${o.status==k?" selected":""}>${v}</option>`).join("")}</select></div><p style="margin:6px 0">${esc(o.address)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> | <a href="https://wa.me/20${esc(o.phone.slice(1))}" target="_blank" rel="noopener">واتساب</a></p>${(o.items||[]).map(i=>`<div>• ${esc(i.n)}${i.o?` (${esc(i.o)})`:""} × ${esc(i.q)}</div>`).join("")}${o.payment=="card"?`<div><small>مدفوع بالكارت: ${esc((o.card_brand||"").toUpperCase())} ••${esc(o.card_last4||"")}</small></div>`:""}<p style="margin:6px 0 0"><b>${f(o.total)}</b> <small>شحن ${f(o.shipping)}${o.discount?`، خصم ${f(o.discount)}${o.code?" ("+esc(o.code)+")":""}`:""}</small></p></div>`).join("")||`<p class="mt">لسه مفيش طلبات.</p>`);
  },
- pr(){return `<h2>المنتجات<button class="b p" data-a="nw">+ منتج جديد</button></h2>${ed?pform():""}`+(P.map(p=>`<div class="cd row">${p.img?`<img class="th" src="${esc(p.img)}" alt="">`:`<span class="th">${esc(p.n[0])}</span>`}<div><b>${esc(p.n)}</b><br><small>${esc(p.c)}، ${f(p.p)}${p.out?"، نفدت الكمية":""}</small></div><button class="b" data-a="edit" data-v="${p.id}">تعديل</button><button class="b" data-a="dup" data-v="${p.id}">نسخ</button><button class="b" data-a="so" data-v="${p.id}">${p.out?"إتاحة":"نفدت"}</button><button class="b x" data-a="del" data-v="${p.id}">${arm==p.id?"تأكيد الحذف":"حذف"}</button></div>`).join("")||`<p class="mt">لسه مفيش منتجات.</p>`)},
+ pr(){return `<h2>المنتجات<button class="b p" data-a="nw">+ منتج جديد</button></h2>${ed?pform():""}`+(P.map(p=>`<div class="cd row">${IM(p.img)[0]?`<img class="th" src="${esc(IM(p.img)[0])}" alt="">`:`<span class="th">${esc(p.n[0])}</span>`}<div><b>${esc(p.n)}</b><br><small>${esc(p.c)}، ${f(p.p)}${p.out?"، نفدت الكمية":""}</small></div><button class="b" data-a="edit" data-v="${p.id}">تعديل</button><button class="b" data-a="dup" data-v="${p.id}">نسخ</button><button class="b" data-a="so" data-v="${p.id}">${p.out?"إتاحة":"نفدت"}</button><button class="b x" data-a="del" data-v="${p.id}">${arm==p.id?"تأكيد الحذف":"حذف"}</button></div>`).join("")||`<p class="mt">لسه مفيش منتجات.</p>`)},
  sh(){const sg=S.sg||{},d=S.ship==null?60:S.ship;
   return `<h2>أسعار الشحن</h2><div class="cd fm"><label>سعر الشحن الافتراضي (للمحافظة اللي سعرها فاضي)<input id="ss" type="number" inputmode="numeric" min="0" value="${esc(d)}"></label><label>نفس السعر لكل المحافظات<span class="row"><input id="su" type="number" inputmode="numeric" min="0" placeholder="اكتب السعر" style="flex:1;width:auto"><button class="b" data-a="same">تطبيق على الكل</button></span></label><div class="g2">${GOV.map(g=>`<label>${g}<input data-g="${g}" type="number" inputmode="numeric" min="0" placeholder="${esc(d)}" value="${sg[g]==null?"":esc(sg[g])}"></label>`).join("")}</div><small>سيب الخانة فاضية عشان تاخد السعر الافتراضي، واكتب 0 لو الشحن ليها مجاني.</small><label>شحن مجاني لو الطلب وصل لـ (جنيه)، سيبه فاضي لو مش عايز<input id="sf" type="number" inputmode="numeric" min="0" value="${S.free>0?esc(S.free):""}"></label><label>مدة التوصيل<input id="se" value="${esc(S.eta)}"></label><button class="b p" data-a="sv">حفظ الشحن</button></div>`},
  st(){return `<h2>إعدادات المتجر</h2><div class="cd fm"><label>اسم المتجر<input id="sn" value="${esc(S.name)}"></label><label>رقم واتساب لاستقبال الطلبات<input id="sw" inputmode="tel" value="${esc(S.wa)}"></label><label>الشريط العلوي (اختياري)<input id="so" value="${esc(S.note)}"></label><label>فيديو أو GIF أعلى الصفحة (رابط mp4 أو gif، اختياري)<input id="k4" dir="ltr" value="${esc(S.hero)}"></label><label>الأقسام (افصل بينها بفاصلة)<input id="sc" value="${esc(S.cats.join("، "))}"></label><label>أكواد الخصم (مثال: LAMSA10:10، EID:15، الرقم نسبة %)<input id="sd" value="${esc(Object.entries(S.codes||{}).map(a=>a.join(":")).join("، "))}"></label><label>انستجرام (رابط أو اسم الحساب)<input id="k1" dir="ltr" value="${esc((S.soc||{}).ig)}"></label><label>لينكدإن (الرابط)<input id="k2" dir="ltr" value="${esc((S.soc||{}).li)}"></label><label>واتساب (رقم أو رابط)<input id="k3" dir="ltr" value="${esc((S.soc||{}).wa)}"></label><small>أي خانة فاضية، أيقونتها مش هتظهر في الموقع.</small><button class="b p" data-a="sv">حفظ الإعدادات</button></div>`}
@@ -78,15 +80,17 @@ const A={
  async li(){const r=await db.auth.signInWithPassword({email:$("#le").value.trim(),password:$("#lp").value});if(r.error)return toast("الإيميل أو الباسورد غلط");enter()},
  async lo(){await db.auth.signOut();login()},
  tab(v){tab=v;ed=null;arm=null;shell()},
- nw(){ed={id:0,n:"",c:S.cats[0]||"",p:"",o:0,opt:"",img:"",out:false};blob=null;body()},
- edit(v){ed={...find(v)};blob=null;body();scrollTo(0,0)},
+ nw(){ed={id:0,n:"",c:S.cats[0]||"",p:"",o:0,opt:"",img:"",l:[],out:false};blob=null;body()},
+ edit(v){ed={...find(v)};ed.l=IM(ed.img).map(u=>({u}));blob=null;body();scrollTo(0,0)},
  cc(){ed=null;blob=null;body()},
+ ri(v){ed.l.splice(+v,1);$("#pv").innerHTML=pvh()},
+ mi(v){const[x]=ed.l.splice(+v,1);ed.l.unshift(x);$("#pv").innerHTML=pvh()},
  async sp(){
   const n=$("#in").value.trim(),p=+$("#ip").value;if(!n||!(p>0))return toast("اكتب اسم المنتج وسعره");
   const b=$("#spb");b.disabled=true;
   try{
-   let img=ed.img||"";
-   if(blob){const path=Date.now()+".jpg",u=await db.storage.from("products").upload(path,blob,{contentType:"image/jpeg"});if(u.error)throw u.error;img=db.storage.from("products").getPublicUrl(path).data.publicUrl}
+   const urls=[];for(const x of ed.l){if(x.b){const path=Date.now()+"-"+urls.length+".jpg",u=await db.storage.from("products").upload(path,x.b,{contentType:"image/jpeg"});if(u.error)throw u.error;urls.push(db.storage.from("products").getPublicUrl(path).data.publicUrl)}else urls.push(x.u)}
+   const img=urls.length>1?JSON.stringify(urls):(urls[0]||"");
    const row={n,c:$("#ic").value,p,o:+$("#io").value||0,opt:$("#iz").value.trim(),img,out:!!ed.out},r=ed.id?await db.from("products").update(row).eq("id",ed.id):await db.from("products").insert(row);
    if(r.error)throw r.error;
    ed=null;blob=null;await pull();body();toast("اتحفظ المنتج");
@@ -107,8 +111,8 @@ document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.id=="lp")A.l
 document.addEventListener("change",async e=>{
  const t=e.target;
  if(t.id=="ii"){
-  const file=t.files[0];if(!file)return;
-  try{const b=await createImageBitmap(file),s=Math.min(1,900/Math.max(b.width,b.height)),c=document.createElement("canvas");c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext("2d").drawImage(b,0,0,c.width,c.height);blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.82));$("#pv").innerHTML=`<img class="th" src="${URL.createObjectURL(blob)}" alt="">`}catch(x){toast("جرّب صورة JPG أو PNG")}
+  for(const file of t.files){try{const b=await createImageBitmap(file),s=Math.min(1,900/Math.max(b.width,b.height)),c=document.createElement("canvas");c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext("2d").drawImage(b,0,0,c.width,c.height);const bl=await new Promise(r=>c.toBlob(r,"image/jpeg",.82));ed.l.push({u:URL.createObjectURL(bl),b:bl})}catch(x){toast("جرّب صور JPG أو PNG")}}
+  t.value="";$("#pv").innerHTML=pvh();
  }else if(t.dataset.s){
   const r=await db.from("orders").update({status:t.value}).eq("id",t.dataset.s);
   if(r.error)return toast("مشكلة: "+r.error.message);
