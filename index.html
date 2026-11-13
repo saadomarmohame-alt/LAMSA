@@ -320,6 +320,21 @@ small{color:var(--mut)}
 @keyframes pop{from{transform:scale(.6);opacity:0}}
 @keyframes bob{from{transform:scaleX(-1)}to{transform:scaleX(-1) translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){.tf,.tf.mv,.oi,.oi svg,.oi::after,.st.on .nd{animation:none!important}.s-shipped .oi svg{transform:scaleX(-1)}}
+body.chat{overflow:hidden}body.chat #ts{z-index:50}
+#cht{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.5)}
+.chb{display:flex;flex-direction:column;width:100%;max-width:460px;height:100dvh;background:var(--bg);overflow:hidden;padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(min-width:561px){#cht{align-items:center}.chb{height:min(100dvh,640px);border-radius:18px}}
+.chh{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;padding-top:calc(10px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--ln);background:var(--sf)}
+.chh b{font-size:15px}.chh small{display:block;color:var(--mut)}
+.chh button{width:36px;height:36px;border:1px solid var(--ln);border-radius:50%;background:var(--sf);line-height:1}
+.chm{flex:1;display:flex;flex-direction:column;gap:8px;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px}
+.mg{max-width:82%;padding:8px 12px;border-radius:14px;font-size:14px;line-height:1.55;word-break:break-word;white-space:pre-wrap}
+.mg small{display:block;margin-top:2px;font-size:10.5px;opacity:.65;color:inherit}
+.mg.cu{align-self:flex-start;border-end-start-radius:4px;background:var(--ink);color:var(--bg)}
+.mg.ad{align-self:flex-end;border:1px solid var(--ln);border-end-end-radius:4px;background:var(--sf)}
+.chf{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--ln);background:var(--sf)}
+.chf input{flex:1;min-width:0;border:1px solid var(--ln);border-radius:99px;background:var(--bg);padding:10px 14px}
+.chf button{border:0;border-radius:99px;background:var(--ink);color:var(--bg);padding:0 18px;font-weight:600}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -386,7 +401,7 @@ const A={
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.v)});
 addEventListener("keydown",e=>{if(e.key=="Escape")document.body.classList.remove("open","menu")});
 document.title=D.name;
-R.innerHTML=`<header><div class="w hd"><button class="ib" id="mb" aria-label="القائمة" aria-controls="mn" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><a class="logo" href="#">${esc(D.name)}</a><div class="hr"><a class="ib" id="ob" href="#orders" aria-label="طلباتي" title="طلباتي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"/></svg></a><button class="ib" id="sb" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg></button><button class="ib" id="cb" aria-label="السلة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><span id="cn">0</span></button></div></div><div class="sr" id="sr" hidden><input id="q" type="search" placeholder="ابحث عن منتج…" aria-label="بحث"></div></header>${D.note?`<div class="note">${esc(D.note)}</div>`:""}<section class="w" id="hv" hidden><div class="hm"></div></section><section class="w" id="pv" hidden></section><section class="w" id="ordv" hidden></section><section class="w" id="cs"><h2 id="ph">المنتجات</h2><div class="grid" id="grid"></div><div class="pg" id="pg"></div><footer class="fo" id="fo"></footer></section><div id="ov"></div><aside id="mn" aria-label="القائمة"><div class="mh"><span class="logo">${esc(D.name)}</span><button id="mx" aria-label="إغلاق">✕</button></div><nav id="ml"></nav></aside><aside id="dr" aria-label="السلة"><div class="dh"><b>سلة المشتريات</b><button class="ib" id="x" aria-label="إغلاق">✕</button></div><div id="ln"></div><div id="co"><div class="tt"><span>الإجمالي</span><b id="tot"></b></div><button class="add pri" data-a="go">إتمام الشراء</button><small>الشحن والخصومات بتتحسب في الصفحة الجاية.</small><small id="fr"></small></div></aside><nav class="gm" id="gm" aria-label="الأقسام"></nav><div id="ckv" hidden></div>`;
+R.innerHTML=`<header><div class="w hd"><button class="ib" id="mb" aria-label="القائمة" aria-controls="mn" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><a class="logo" href="#">${esc(D.name)}</a><div class="hr"><a class="ib" id="ob" href="#orders" aria-label="طلباتي" title="طلباتي"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"/></svg></a><button class="ib" id="sb" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg></button><button class="ib" id="cb" aria-label="السلة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><span id="cn">0</span></button></div></div><div class="sr" id="sr" hidden><input id="q" type="search" placeholder="ابحث عن منتج…" aria-label="بحث"></div></header>${D.note?`<div class="note">${esc(D.note)}</div>`:""}<section class="w" id="hv" hidden><div class="hm"></div></section><section class="w" id="pv" hidden></section><section class="w" id="ordv" hidden></section><div id="cht" hidden></div><section class="w" id="cs"><h2 id="ph">المنتجات</h2><div class="grid" id="grid"></div><div class="pg" id="pg"></div><footer class="fo" id="fo"></footer></section><div id="ov"></div><aside id="mn" aria-label="القائمة"><div class="mh"><span class="logo">${esc(D.name)}</span><button id="mx" aria-label="إغلاق">✕</button></div><nav id="ml"></nav></aside><aside id="dr" aria-label="السلة"><div class="dh"><b>سلة المشتريات</b><button class="ib" id="x" aria-label="إغلاق">✕</button></div><div id="ln"></div><div id="co"><div class="tt"><span>الإجمالي</span><b id="tot"></b></div><button class="add pri" data-a="go">إتمام الشراء</button><small>الشحن والخصومات بتتحسب في الصفحة الجاية.</small><small id="fr"></small></div></aside><nav class="gm" id="gm" aria-label="الأقسام"></nav><div id="ckv" hidden></div>`;
 $("#q").oninput=e=>{q=e.target.value.trim();pg=0;grid()};
 document.addEventListener("change",e=>{if(e.target.name=="pg"){pg=+e.target.value;grid();$("#ph").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})}});
 $("#cb").onclick=()=>document.body.classList.add("open");
@@ -530,7 +545,7 @@ const NSM={};[["new","new","pending","placed","جديد","قيد الانتظا�
 function nst(v){const n=nrm(v);if(NSM[n])return NSM[n];return /cancel|ملغ|الغ|رفض/.test(n)?"cancel":/warehouse|مستودع|مخزن/.test(n)?"warehouse":/ship|dispatch|out for|شحن|طريق/.test(n)?"shipped":/deliver|done|complete|سلم|تسليم|وصل/.test(n)?"done":/confirm|accept|process|اكيد|مؤكد|جهز|تجهيز/.test(n)?"confirmed":/new|pending|جديد|انتظار/.test(n)?"new":""}
 const OKI={new:0,confirmed:1,warehouse:2,shipped:3,done:4},XI="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9l6 6m0-6-6 6";
 const STP=[["استلمنا الطلب","M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"],["تم التأكيد","M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 12.5l2.8 2.8 5.7-5.8"],["المستودع","M3 9.5 12 4l9 5.5V20H3zM7 20v-5h10v5M7 17.5h10"],["تم الشحن","M3 6h11v10H3zM14 9h4l3 3v4h-7zM9.3 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0zM18.8 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0z"],["اتسلّم","M6 8h12l1 13H5zM9 8a3 3 0 0 1 6 0M9.5 15l2 2 3.5-3.5"]];
-const INF={new:["استلمنا طلبك","هنكلّمك على موبايلك لتأكيد الطلب والشحن."],confirmed:["اتأكّد طلبك","بنجهّز الطلب وهيتشحن قريب."],warehouse:["طلبك اتشحن للمستودع","الطلب وصل مستودع الشحن وهيتسلّم لشركة الشحن قريب."],shipped:["طلبك في الطريق","الشحنة خرجت للتوصيل، خلّي موبايلك مفتوح."],done:["اتسلّم الطلب","نتمنى المنتجات تعجبك."],cancel:["الطلب اتلغى","لو عايز تعرف السبب أو تعيد الطلب، كلّمنا على واتساب."]};
+const INF={new:["استلمنا طلبك","هنكلّمك على موبايلك لتأكيد الطلب والشحن."],confirmed:["اتأكّد طلبك","بنجهّز الطلب وهيتشحن قريب."],warehouse:["طلبك اتشحن للمستودع","الطلب وصل مستودع الشحن وهيتسلّم لشركة الشحن قريب."],shipped:["طلبك في الطريق","الشحنة خرجت للتوصيل، خلّي موبايلك مفتوح."],done:["اتسلّم الطلب","نتمنى المنتجات تعجبك."],cancel:["الطلب اتلغى","لو عايز تعرف السبب أو تعيد الطلب، راسلنا من الشات."]};
 const osvg=(d,c)=>`<svg viewBox="0 0 24 24" class="${c||""}" aria-hidden="true"><path d="${d}"/></svg>`;
 const dg=t=>String(t||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
 const odate=t=>{try{return new Date(t).toLocaleDateString("ar-EG-u-nu-latn",{day:"numeric",month:"long",year:"numeric"})}catch(e){return""}};
@@ -565,11 +580,10 @@ function oshell(){
 function ocard(o){
  const r=o.r,rm=`<button class="orm" data-a="orm" data-v="${esc(r)}">إخفاء من القائمة</button>`;
  if(o.err)return `<article class="oc"><div class="ot"><b dir="ltr">${esc(r)}</b>${rm}</div><p class="mt" style="padding:14px 0 0">${o.err=="nf"?"مش لاقيين الطلب ده. راجع الكود ورقم الموبايل.":"مقدرناش نحمّل حالة الطلب. جرّب تدوس تحديث."}</p></article>`;
- const raw=String(o.status==null?"":o.status).trim(),k=raw?nst(raw):"new",s=k||"new",i=OKI[s]??0,w=s=="done"?100:(i+.5)/4*100,inf=k?INF[s]:["حالة الطلب: "+raw,"بنحدّث حالة طلبك، وتقدر تكلّمنا على واتساب لو محتاج."];
+ const raw=String(o.status==null?"":o.status).trim(),k=raw?nst(raw):"new",s=k||"new",i=OKI[s]??0,w=s=="done"?100:(i+.5)/4*100,inf=k?INF[s]:["حالة الطلب: "+raw,"بنحدّث حالة طلبك، وتقدر تراسلنا من الشات لو محتاج."];
  const tk=s=="cancel"?"":`<div class="tk" role="img" aria-label="مراحل الطلب، المرحلة الحالية: ${STP[i][0]}"><div class="tb"><div class="tf${i<4?" mv":""}" style="--w:${w}%"></div></div>${STP.map((x,k)=>`<div class="st${k<=i?" on":""}${k==i?" cur":""}" style="--i:${k}"><div class="nd">${osvg(x[1],k==3?"tr":"")}</div><span>${x[0]}</span></div>`).join("")}</div>`;
  const its=(Array.isArray(o.items)?o.items:[]).map(x=>`<div class="ol"><span>${esc(x.n)}${x.o?` <small>(${esc(x.o)})</small>`:""} × ${esc(x.q)}</span>${x.p?`<span>${f(x.p*x.q)}</span>`:""}</div>`).join("");
- const wa=D.wa?`<a class="obt" href="https://wa.me/${esc(String(D.wa).replace(/\D/g,""))}?text=${encodeURIComponent("بسأل عن طلبي كود "+r)}" target="_blank" rel="noopener">كلّمنا على واتساب</a>`:"";
- return `<article class="oc s-${s}"><div class="ot"><b dir="ltr">${esc(r)}</b><small>${odate(o.created_at)}</small></div><div class="os"><div class="oi">${osvg(s=="cancel"?XI:STP[i][1],s=="shipped"?"tr":"")}</div><div><h3>${esc(inf[0])}</h3><p>${esc(inf[1])}</p>${s!="cancel"&&o.carrier?`<p class="ocr">شركة الشحن: ${esc(o.carrier)}</p>`:""}</div></div>${tk}<details class="od2"><summary><span>تفاصيل الطلب</span><b>${f(o.total)}</b></summary>${its}<div class="otl"><span>المجموع الفرعي</span><span>${f(o.subtotal)}</span></div>${+o.discount>0?`<div class="otl"><span>خصم</span><span>- ${f(o.discount)}</span></div>`:""}<div class="otl"><span>الشحن</span><span>${+o.shipping?f(o.shipping):"مجاني"}</span></div><div class="otl g"><span>الإجمالي</span><span>${f(o.total)}</span></div></details><div class="oa">${wa}${rm}</div></article>`;
+ return `<article class="oc s-${s}"><div class="ot"><b dir="ltr">${esc(r)}</b><small>${odate(o.created_at)}</small></div><div class="os"><div class="oi">${osvg(s=="cancel"?XI:STP[i][1],s=="shipped"?"tr":"")}</div><div><h3>${esc(inf[0])}</h3><p>${esc(inf[1])}</p>${s!="cancel"&&o.carrier?`<p class="ocr">شركة الشحن: ${esc(o.carrier)}</p>`:""}</div></div>${tk}<details class="od2"><summary><span>تفاصيل الطلب</span><b>${f(o.total)}</b></summary>${its}<div class="otl"><span>المجموع الفرعي</span><span>${f(o.subtotal)}</span></div>${+o.discount>0?`<div class="otl"><span>خصم</span><span>- ${f(o.discount)}</span></div>`:""}<div class="otl"><span>الشحن</span><span>${+o.shipping?f(o.shipping):"مجاني"}</span></div><div class="otl g"><span>الإجمالي</span><span>${f(o.total)}</span></div></details><div class="oa"><button class="obt" data-a="chat" data-v="${esc(r)}">راسلنا${+o.unread>0?` (${+o.unread})`:""}</button>${rm}</div></article>`;
 }
 function paint(){
  if(view!="o")return;const l=$("#ol");if(!l)return;
@@ -607,6 +621,41 @@ Object.assign(A,{
  }
 });
 addEventListener("keydown",e=>{if(e.key=="Enter"&&(e.target.id=="lr"||e.target.id=="lp2"))A.olk()});
+
+let CT=null,ctI=null;
+const ctt=t=>{try{return new Date(t).toLocaleTimeString("ar-EG-u-nu-latn",{hour:"numeric",minute:"2-digit"})}catch(e){return""}};
+async function rpc(n,b){const x=await fetch(SB_URL+"/rest/v1/rpc/"+n,{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify(b),cache:"no-store"});if(!x.ok)throw 0;return x.json()}
+const chMsgs=()=>CT.m.map(m=>`<div class="mg ${m.sender=="admin"?"ad":"cu"}">${esc(m.body)}<small>${ctt(m.created_at)}</small></div>`).join("")||`<p class="mt" style="padding:20px 0">${CT.err?"الشات مش متاح دلوقتي. جرّب تاني بعد شوية.":CT.ld?"جاري التحميل…":"ابعت رسالتك وهنرد عليك هنا."}</p>`;
+async function chPull(){
+ const c=CT;if(!c)return;
+ try{
+  const j=await rpc("chat_get",{p_ref:c.ref,p_phone:c.p});if(CT!==c)return;
+  const a=Array.isArray(j)?j:[];c.err=false;c.ld=false;
+  const el=$("#chm"),near=!el||el.scrollHeight-el.scrollTop-el.clientHeight<90,n=c.m.filter(m=>!m.tmp).length;
+  if(a.length!=n||c.first){c.m=a;c.first=false;if(el){el.innerHTML=chMsgs();if(near||!n)el.scrollTop=el.scrollHeight}}
+ }catch(e){if(CT!==c)return;c.err=true;c.ld=false;const el=$("#chm");if(el&&!c.m.length)el.innerHTML=chMsgs()}
+}
+Object.assign(A,{
+ chat(v){
+  const o=OD.find(x=>x.r==v);if(!o||!o.p)return;
+  CT={ref:v,p:o.p,m:[],ld:true,first:true};
+  $("#cht").innerHTML=`<div class="chb" role="dialog" aria-modal="true" aria-label="شات الطلب"><div class="chh"><div><b>${esc(D.name)}</b><small dir="ltr" style="text-align:start">${esc(v)}</small></div><button data-a="cclose" aria-label="إغلاق">✕</button></div><div class="chm" id="chm" aria-live="polite"></div><div class="chf"><input id="chi" maxlength="1000" placeholder="اكتب رسالتك…" autocomplete="off" aria-label="رسالتك"><button data-a="csend">إرسال</button></div></div>`;
+  $("#chm").innerHTML=chMsgs();$("#cht").hidden=false;document.body.classList.add("chat");
+  chPull();clearInterval(ctI);ctI=setInterval(()=>{if(!document.hidden)chPull()},4000);
+  if(!matchMedia("(pointer:coarse)").matches)setTimeout(()=>{const i=$("#chi");if(i)i.focus()},50)
+ },
+ cclose(){clearInterval(ctI);CT=null;$("#cht").hidden=true;$("#cht").innerHTML="";document.body.classList.remove("chat");if(view=="o")load(true)},
+ async csend(){
+  const c=CT,i=$("#chi"),b=i&&i.value.trim();if(!c||c.busy||!b)return;
+  c.busy=true;i.value="";c.m.push({sender:"customer",body:b,created_at:new Date().toISOString(),tmp:1});
+  let el=$("#chm");el.innerHTML=chMsgs();el.scrollTop=el.scrollHeight;
+  try{const j=await rpc("chat_send",{p_ref:c.ref,p_phone:c.p,p_body:b});if(!j||!j.id)throw 0;c.err=false}
+  catch(e){c.m=c.m.filter(m=>!m.tmp);if(CT===c){el=$("#chm");el.innerHTML=chMsgs();const x=$("#chi");if(x&&!x.value)x.value=b}toast("الرسالة ماتبعتتش. جرّب تاني بعد شوية.")}
+  c.busy=false;if(CT===c)chPull()
+ }
+});
+addEventListener("keydown",e=>{if(e.key=="Escape"&&CT)A.cclose();if(e.key=="Enter"&&e.target.id=="chi")A.csend()});
+document.addEventListener("click",e=>{if(e.target.id=="cht")A.cclose()});
 addEventListener("hashchange",route);
 hero();tabs();upd();foot();route();
 </script></body></html>

@@ -39,6 +39,12 @@ input,select,textarea{width:100%;padding:8px 10px;border:1px solid var(--ln);bor
 .th{width:52px;height:68px;flex:none;object-fit:cover;background:#e6e6e6;display:grid;place-items:center;color:var(--mut)}
 #ts{position:fixed;inset:auto 0 20px;margin:auto;width:max-content;max-width:90%;z-index:30;background:var(--ink);color:var(--bg);padding:8px 16px;font-size:14px}
 .lg{max-width:360px;margin:12vh auto 0}
+.chp{margin:8px 0 4px;border:1px solid var(--ln);background:var(--bg);padding:10px}
+.cms{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow-y:auto;margin-bottom:8px}
+.mg{max-width:80%;padding:6px 10px;border-radius:10px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
+.mg small{display:block;font-size:11px;opacity:.7;color:inherit}
+.mg.ad{align-self:flex-start;background:var(--ink);color:var(--bg)}
+.mg.cu{align-self:flex-end;background:var(--sf);border:1px solid var(--ln)}
 </style></head><body><div id="app"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>
 const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M9l49LIVJTjs4W4KmJgP0Q_Yy5FZd1r";
 const $=s=>document.querySelector(s),R=$("#app");
@@ -47,6 +53,7 @@ const f=n=>(+n||0).toLocaleString("en-US")+" ج.م";
 const GOV="القاهرة,الجيزة,الإسكندرية,القليوبية,الشرقية,الدقهلية,الغربية,المنوفية,البحيرة,كفر الشيخ,دمياط,بورسعيد,الإسماعيلية,السويس,شمال سيناء,جنوب سيناء,الفيوم,بني سويف,المنيا,أسيوط,سوهاج,قنا,الأقصر,أسوان,البحر الأحمر,الوادي الجديد,مطروح".split(",");
 const ST={new:"جديد",confirmed:"تم التأكيد",warehouse:"اتشحن للمستودع",shipped:"تم الشحن",done:"اتسلّم",cancel:"ملغي"},TABS={or:"الطلبات",pr:"المنتجات",sh:"الشحن",st:"الإعدادات"};
 const db=SB_URL&&SB_KEY&&window.supabase?supabase.createClient(SB_URL,SB_KEY):null;
+let CH={ref:null,m:[]},UN={};
 let S={name:"لمسة",wa:"",note:"",ship:60,sg:{},free:0,eta:"من 3 لـ 5 أيام عمل",codes:{},cats:[]},P=[],O=[],tab="or",ed=null,arm=null,blob=null,TG={},tt;
 const IM=v=>{if(!v)return[];if(v[0]=="[")try{return JSON.parse(v)}catch(e){}return[v]};
 const pvh=()=>ed.l.map((x,i)=>`<div style="position:relative"><img class="th" src="${esc(x.u)}" alt=""><button class="b x" data-a="ri" data-v="${i}" aria-label="حذف الصورة" style="position:absolute;top:0;inset-inline-end:0;padding:0 7px">×</button>${i?`<button class="b" data-a="mi" data-v="${i}" style="padding:0 7px;font-size:12px">★ رئيسية</button>`:`<small>الرئيسية</small>`}</div>`).join("");
@@ -57,9 +64,24 @@ async function pull(){
  const er=a.error||b.error||c.error;if(er)return toast("فشل التحميل: "+er.message);
  if(a.data)Object.assign(S,a.data.data);S.cats=S.cats||[];P=b.data;O=c.data;
  const t=await db.from("private_settings").select("data").eq("id",1).maybeSingle();TG=(t.data&&t.data.data)||{};
+ await pullUn();
 }
 async function run(q,m){const r=await q;if(r.error)return toast("مشكلة: "+r.error.message);await pull();body();if(m)toast(m)}
 async function push(){const r=await db.from("settings").upsert({id:1,data:S});toast(r.error?"مشكلة: "+r.error.message:"اتحفظ")}
+const unT=()=>Object.values(UN).reduce((x,y)=>x+y,0);
+async function pullUn(){const r=await db.from("order_messages").select("ref").eq("sender","customer").eq("read_admin",false).limit(1000);if(r.error)return;UN={};(r.data||[]).forEach(x=>{UN[x.ref]=(UN[x.ref]||0)+1})}
+const cmh=()=>CH.m.map(m=>`<div class="mg ${m.sender=="admin"?"ad":"cu"}">${esc(m.body)}<small>${new Date(m.created_at).toLocaleTimeString("ar-EG",{hour:"numeric",minute:"2-digit"})}</small></div>`).join("")||`<p class="mt" style="padding:14px 0">لسه مفيش رسائل.</p>`;
+const chatp=ref=>CH.ref==ref?`<div class="chp"><div id="cm" class="cms">${cmh()}</div><div class="row"><input id="ci" placeholder="اكتب ردك…" maxlength="1000" autocomplete="off" aria-label="الرد" style="flex:1 1 200px"><button class="b p" data-a="csend">إرسال</button></div></div>`:"";
+function ubadge(){document.querySelectorAll("[data-ub]").forEach(b=>{const n=UN[b.dataset.ub]||0;b.textContent="شات"+(n?" ("+n+")":"")});const u=$("#unm");if(u)u.textContent=unT()}
+async function loadChat(){
+ const ref=CH.ref;if(!ref)return;
+ const r=await db.from("order_messages").select("*").eq("ref",ref).order("id",{ascending:true}).limit(300);
+ if(r.error){toast("الشات: "+r.error.message);return}if(CH.ref!=ref)return;
+ const el=$("#cm"),near=!el||el.scrollHeight-el.scrollTop-el.clientHeight<80,n=CH.m.length;
+ CH.m=r.data||[];
+ if(el&&(CH.m.length!=n||!n)){el.innerHTML=cmh();if(near||!n)el.scrollTop=el.scrollHeight}
+ if(UN[ref]){UN[ref]=0;await db.from("order_messages").update({read_admin:true}).eq("ref",ref).eq("sender","customer").eq("read_admin",false);ubadge()}
+}
 function login(){R.innerHTML=`<div class="w"><div class="cd fm lg"><span class="logo">لمسة</span><label>الإيميل<input id="le" type="email" autocomplete="username"></label><label>الباسورد<input id="lp" type="password" autocomplete="current-password"></label><button class="b p" data-a="li">دخول</button></div></div>`}
 async function enter(){await pull();shell()}
 function shell(){
@@ -70,7 +92,7 @@ const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" val
 const V={
  or(){
   const day=new Date().toDateString(),ok=O.filter(o=>o.status!="cancel"),td=ok.filter(o=>new Date(o.created_at).toDateString()==day),sum=a=>a.reduce((s,o)=>s+o.total,0);
-  return `<div class="sts"><div class="cd">طلبات جديدة<b>${nn()}</b></div><div class="cd">طلبات النهاردة<b>${td.length}</b></div><div class="cd">مبيعات النهاردة<b>${f(sum(td))}</b></div><div class="cd">إجمالي المبيعات<b>${f(sum(ok))}</b></div></div><h2>الطلبات</h2>`+(O.map(o=>`<div class="cd"><div class="row"><b>${esc(o.ref||"#"+o.id)} · ${esc(o.name)}</b><small style="flex:1">${new Date(o.created_at).toLocaleString("ar-EG")}</small><select data-s="${o.id}" aria-label="حالة الطلب">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${o.status==k?" selected":""}>${v}</option>`).join("")}</select></div><div class="row" style="margin-top:6px"><input data-c="${o.id}" value="${esc(o.carrier)}" placeholder="شركة الشحن (اختياري) مثال: بوسطة، أرامكس" maxlength="60" aria-label="شركة الشحن"></div><p style="margin:6px 0">${esc(o.address)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> | <a href="https://wa.me/20${esc(o.phone.slice(1))}" target="_blank" rel="noopener">واتساب</a></p>${(o.items||[]).map(i=>`<div>• ${esc(i.n)}${i.o?` (${esc(i.o)})`:""} × ${esc(i.q)}</div>`).join("")}${o.payment=="card"?`<div><small>مدفوع بالكارت: ${esc((o.card_brand||"").toUpperCase())} ••${esc(o.card_last4||"")}</small></div>`:""}<p style="margin:6px 0 0"><b>${f(o.total)}</b> <small>شحن ${f(o.shipping)}${o.discount?`، خصم ${f(o.discount)}${o.code?" ("+esc(o.code)+")":""}`:""}</small></p></div>`).join("")||`<p class="mt">لسه مفيش طلبات.</p>`);
+  return `<div class="sts"><div class="cd">طلبات جديدة<b>${nn()}</b></div><div class="cd">رسائل جديدة<b id="unm">${unT()}</b></div><div class="cd">طلبات النهاردة<b>${td.length}</b></div><div class="cd">مبيعات النهاردة<b>${f(sum(td))}</b></div><div class="cd">إجمالي المبيعات<b>${f(sum(ok))}</b></div></div><h2>الطلبات</h2>`+(O.map(o=>`<div class="cd"><div class="row"><b>${esc(o.ref||"#"+o.id)} · ${esc(o.name)}</b><small style="flex:1">${new Date(o.created_at).toLocaleString("ar-EG")}</small><select data-s="${o.id}" aria-label="حالة الطلب">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${o.status==k?" selected":""}>${v}</option>`).join("")}</select></div><div class="row" style="margin-top:6px"><input data-c="${o.id}" value="${esc(o.carrier)}" placeholder="شركة الشحن (اختياري) مثال: بوسطة، أرامكس" maxlength="60" aria-label="شركة الشحن" style="flex:1 1 200px"><button class="b" data-a="chat" data-v="${esc(o.ref)}" data-ub="${esc(o.ref)}">شات${UN[o.ref]?` (${UN[o.ref]})`:""}</button></div>${chatp(o.ref)}<p style="margin:6px 0">${esc(o.address)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> | <a href="https://wa.me/20${esc(o.phone.slice(1))}" target="_blank" rel="noopener">واتساب</a></p>${(o.items||[]).map(i=>`<div>• ${esc(i.n)}${i.o?` (${esc(i.o)})`:""} × ${esc(i.q)}</div>`).join("")}${o.payment=="card"?`<div><small>مدفوع بالكارت: ${esc((o.card_brand||"").toUpperCase())} ••${esc(o.card_last4||"")}</small></div>`:""}<p style="margin:6px 0 0"><b>${f(o.total)}</b> <small>شحن ${f(o.shipping)}${o.discount?`، خصم ${f(o.discount)}${o.code?" ("+esc(o.code)+")":""}`:""}</small></p></div>`).join("")||`<p class="mt">لسه مفيش طلبات.</p>`);
  },
  pr(){return `<h2>المنتجات<button class="b p" data-a="nw">+ منتج جديد</button></h2>${ed?pform():""}`+(P.map(p=>`<div class="cd row">${IM(p.img)[0]?`<img class="th" src="${esc(IM(p.img)[0])}" alt="">`:`<span class="th">${esc(p.n[0])}</span>`}<div><b>${esc(p.n)}</b><br><small>${esc(p.c)}، ${f(p.p)}${p.out?`، <b style="color:var(--er)">نفدت الكمية</b>`:""}</small></div><button class="b" data-a="edit" data-v="${p.id}">تعديل</button><button class="b" data-a="dup" data-v="${p.id}">نسخ</button><button class="b" data-a="so" data-v="${p.id}">${p.out?"إتاحة":"نفدت"}</button><button class="b x" data-a="del" data-v="${p.id}">${arm==p.id?"تأكيد الحذف":"حذف"}</button></div>`).join("")||`<p class="mt">لسه مفيش منتجات.</p>`)},
  sh(){const sg=S.sg||{},d=S.ship==null?60:S.ship;
@@ -110,8 +132,12 @@ const A={
   push();shell();
  }
 };
+Object.assign(A,{
+ chat(v){CH={ref:CH.ref==v?null:v,m:[]};body();if(CH.ref){loadChat();const i=$("#ci");if(i)i.focus()}},
+ async csend(){const i=$("#ci"),b=i&&i.value.trim();if(!b||!CH.ref)return;i.value="";const r=await db.from("order_messages").insert({ref:CH.ref,sender:"admin",body:b.slice(0,1000),read_admin:true});if(r.error){i.value=b;return toast("مشكلة: "+r.error.message)}await loadChat()}
+});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.v)});
-document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.id=="lp")A.li()});
+document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.id=="lp")A.li();if(e.key=="Enter"&&e.target.id=="ci")A.csend()});
 document.addEventListener("change",async e=>{
  const t=e.target;
  if(t.id=="ii"){
@@ -127,6 +153,7 @@ document.addEventListener("change",async e=>{
   O.find(o=>o.id==t.dataset.c).carrier=v||null;toast(v?"اتحفظت شركة الشحن":"اتمسحت شركة الشحن");
  }
 });
+setInterval(async()=>{if(!db||document.hidden||!$("#unm"))return;await pullUn();ubadge();if(CH.ref)loadChat()},8000);
 (async()=>{
  if(!db)return R.innerHTML=`<p class="mt">حط SB_URL و SB_KEY في أول السكربت جوه admin.html، وتأكد إنك فاتح الصفحة وفي نت.</p>`;
  const {data}=await db.auth.getSession();data.session?enter():login();
