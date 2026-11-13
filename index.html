@@ -23,12 +23,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var
 .sr input{width:100%;border:0;border-bottom:1px solid var(--ink);background:none;padding:6px 2px}
 .note{background:var(--ink);color:var(--bg);text-align:center;font-size:12px;padding:4px 12px}
 h2{margin:28px 0 12px;font-size:13px;font-weight:700;line-height:1.3}
-.stage{height:280px;perspective:1000px;display:grid;place-items:center;overflow:hidden;touch-action:pan-y;cursor:grab}
-.ring{position:relative;width:150px;height:200px;transform-style:preserve-3d}
-.ct{position:absolute;inset:0;display:flex;flex-direction:column;border:0;padding:0;background:var(--ph);transform:rotateY(var(--a)) translateZ(var(--z));backface-visibility:hidden;box-shadow:0 16px 22px -16px rgba(0,0,0,.55)}
-.ct span{flex:1;display:grid;place-items:center;font:700 64px/1 "Aref Ruqaa","Amiri",serif}
-.ct img{flex:1;min-height:0;width:100%;display:block;object-fit:cover}
-.ct b{background:var(--ink);color:var(--bg);font-size:12px;padding:5px}
+.hm{margin-top:16px;border-radius:14px;overflow:hidden;background:var(--ph);aspect-ratio:16/9;max-height:460px}
+.hm video,.hm img{display:block;width:100%;height:100%;object-fit:cover}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:24px 16px;padding-block:22px 8px}
 .it{padding:8px 8px 12px;text-align:center;perspective:800px;font-weight:600;color:var(--ink);background:rgba(217,217,217,.58);border:1px solid #fff;border-radius:17px;box-shadow:12px 17px 51px rgba(0,0,0,.22);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:all .5s}
 .it:hover{border-color:var(--ink);transform:scale(1.05);z-index:2}
@@ -56,13 +52,21 @@ h2{margin:28px 0 12px;font-size:13px;font-weight:700;line-height:1.3}
 #ov{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}
 #dr,#mn{position:fixed;top:0;bottom:0;z-index:21;width:min(380px,100%);display:flex;flex-direction:column;background:var(--bg);visibility:hidden;transition:transform .25s,visibility .25s;padding-bottom:env(safe-area-inset-bottom,0px)}
 #dr{left:0;transform:translateX(-100%);padding-top:env(safe-area-inset-top,0px)}
-#mn{right:0;width:min(300px,86%);transform:translateX(100%)}
+#mn{right:0;width:min(300px,86%);transform:translateX(100%);box-shadow:-10px 0 40px rgba(0,0,0,.18)}
 .open #ov,.menu #ov{opacity:1;pointer-events:auto}
 .open #dr,.menu #mn{transform:none;visibility:visible}
-.mh{background:var(--ink);padding:10px 14px;padding-top:calc(10px + env(safe-area-inset-top,0px))}
-.mh button{width:28px;height:28px;border:1px solid var(--bg);background:none;color:var(--bg);line-height:1}
-.mi{display:block;width:100%;border:0;border-bottom:1px solid var(--ln);background:none;padding:12px 18px;text-align:start;font-weight:600}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:6px 18px;padding-top:calc(6px + env(safe-area-inset-top,0px));border-bottom:1px solid var(--ln)}
+.mh button{width:40px;height:40px;border:1px solid var(--ln);border-radius:50%;background:var(--sf);color:var(--ink);line-height:1;transition:background .2s,color .2s,border-color .2s}
+.mh button:hover{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.mi{display:flex;align-items:center;gap:14px;width:100%;margin-bottom:4px;border:0;border-radius:12px;background:none;padding:13px 14px;text-align:start;font-weight:600;font-size:15px;transition:background .2s,color .2s}
+.mi svg{width:22px;height:22px;flex:none;opacity:.75}
+.mi small{margin-inline-start:auto;color:inherit;font-weight:500;opacity:.55}
+.mi:hover{background:rgba(0,0,0,.06)}
 .mi.on{background:var(--ink);color:var(--bg)}
+.mi.on svg{opacity:1}
+.mi:focus-visible{outline-offset:2px}
+#ml{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:10px}
+body.open,body.menu{overflow:hidden}
 .dh{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid var(--ln)}
 #ln{flex:1;overflow-y:auto;padding:4px 18px}
 .li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--ln)}
@@ -284,29 +288,24 @@ const A={
 document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.v)});
 addEventListener("keydown",e=>{if(e.key=="Escape")document.body.classList.remove("open","menu")});
 document.title=D.name;
-R.innerHTML=`<header><div class="w hd"><button class="ib" id="mb" aria-label="القائمة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><a class="logo" href="#">${esc(D.name)}</a><div class="hr"><button class="ib" id="sb" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg></button><button class="ib" id="cb" aria-label="السلة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><span id="cn">0</span></button></div></div><div class="sr" id="sr" hidden><input id="q" type="search" placeholder="ابحث عن منتج…" aria-label="بحث"></div></header>${D.note?`<div class="note">${esc(D.note)}</div>`:""}<section class="w"><h2>الأقسام</h2><div class="stage" id="st"><div class="ring" id="rg"></div></div></section><section class="w"><h2 id="ph">المنتجات</h2><div class="grid" id="grid"></div><div class="pg" id="pg"></div><footer class="fo" id="fo"></footer></section><div id="ov"></div><aside id="mn" aria-label="القائمة"><div class="mh"><button id="mx" aria-label="إغلاق">✕</button></div><nav id="ml"></nav></aside><aside id="dr" aria-label="السلة"><div class="dh"><b>سلة المشتريات</b><button class="ib" id="x" aria-label="إغلاق">✕</button></div><div id="ln"></div><div id="co"><div class="tt"><span>الإجمالي</span><b id="tot"></b></div><button class="add pri" data-a="go">إتمام الشراء</button><small>الشحن والخصومات بتتحسب في الصفحة الجاية.</small><small id="fr"></small></div></aside><nav class="gm" id="gm" aria-label="الأقسام"></nav><div id="ckv" hidden></div>`;
+R.innerHTML=`<header><div class="w hd"><button class="ib" id="mb" aria-label="القائمة" aria-controls="mn" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><a class="logo" href="#">${esc(D.name)}</a><div class="hr"><button class="ib" id="sb" aria-label="بحث"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m20 20-4-4"/></svg></button><button class="ib" id="cb" aria-label="السلة"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2"/></svg><span id="cn">0</span></button></div></div><div class="sr" id="sr" hidden><input id="q" type="search" placeholder="ابحث عن منتج…" aria-label="بحث"></div></header>${D.note?`<div class="note">${esc(D.note)}</div>`:""}<section class="w" id="hv" hidden><div class="hm"></div></section><section class="w"><h2 id="ph">المنتجات</h2><div class="grid" id="grid"></div><div class="pg" id="pg"></div><footer class="fo" id="fo"></footer></section><div id="ov"></div><aside id="mn" aria-label="القائمة"><div class="mh"><span class="logo">${esc(D.name)}</span><button id="mx" aria-label="إغلاق">✕</button></div><nav id="ml"></nav></aside><aside id="dr" aria-label="السلة"><div class="dh"><b>سلة المشتريات</b><button class="ib" id="x" aria-label="إغلاق">✕</button></div><div id="ln"></div><div id="co"><div class="tt"><span>الإجمالي</span><b id="tot"></b></div><button class="add pri" data-a="go">إتمام الشراء</button><small>الشحن والخصومات بتتحسب في الصفحة الجاية.</small><small id="fr"></small></div></aside><nav class="gm" id="gm" aria-label="الأقسام"></nav><div id="ckv" hidden></div>`;
 $("#q").oninput=e=>{q=e.target.value.trim();pg=0;grid()};
 document.addEventListener("change",e=>{if(e.target.name=="pg"){pg=+e.target.value;grid();$("#ph").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})}});
 $("#cb").onclick=()=>document.body.classList.add("open");
 $("#mb").onclick=()=>document.body.classList.add("menu");
 $("#sb").onclick=()=>{const b=$("#sr");b.hidden=!b.hidden;if(!b.hidden)$("#q").focus()};
 $("#ov").onclick=$("#x").onclick=$("#mx").onclick=()=>document.body.classList.remove("open","menu");
-function menu(){$("#ml").innerHTML=["الكل",...D.cats].map(c=>`<button class="mi${c==cat?" on":""}" data-a="tab" data-v="${esc(c)}">${c=="الكل"?"كل المنتجات":esc(c)}</button>`).join("")}
-function ring(){
- const n=D.cats.length;
- if(!n){$("#st").parentNode.hidden=true;return}
- $("#rg").style.setProperty("--z",Math.max(110,Math.round(75/Math.tan(Math.PI/n))+40)+"px");
- $("#rg").innerHTML=D.cats.map((c,i)=>{const p=D.items.find(x=>x.c==c&&x.img);return `<button class="ct" style="--a:${i*360/n}deg" data-a="tab" data-v="${esc(c)}">${p?`<img src="${esc(src(p.img))}" alt="">`:`<span>${esc(c[0])}</span>`}<b>${esc(c)}</b></button>`}).join("");
-}
-const rg=$("#rg"),stg=$("#st"),gd=$("#grid"),calm=matchMedia("(prefers-reduced-motion:reduce)").matches;
-let ang=0,x0=0,a0=0,dn=false,moved=0,auto=!calm,cur=null;
-const turn=()=>{rg.style.transform=`rotateY(${ang}deg)`};
-function spin(){if(!auto)return;if(!dn){ang+=.2;turn()}requestAnimationFrame(spin)}
-stg.onpointerdown=e=>{dn=true;moved=0;x0=e.clientX;a0=ang};
-addEventListener("pointermove",e=>{if(!dn)return;moved=Math.max(moved,Math.abs(e.clientX-x0));ang=a0+(e.clientX-x0)*.5;turn()});
-addEventListener("pointerup",()=>{if(dn){dn=false;auto=false}});
-addEventListener("pointercancel",()=>{dn=false});
-stg.addEventListener("click",e=>{if(moved>6)e.stopPropagation()},true);
+let mo=false;
+new MutationObserver(()=>{const m=document.body.classList.contains("menu");if(m===mo)return;mo=m;$("#mb").setAttribute("aria-expanded",m);$(m?"#mx":"#mb").focus({preventScroll:true})}).observe(document.body,{attributes:true,attributeFilter:["class"]});
+function menu(){$("#ml").innerHTML=["الكل",...D.cats].map((c,i)=>`<button class="mi${c==cat?" on":""}" data-a="tab" data-v="${esc(c)}"${c==cat?' aria-current="true"':""}><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="${IC[i?1+(i-1)%(IC.length-1):0]}"/></svg><span>${c=="الكل"?"كل المنتجات":esc(c)}</span><small>${i?D.items.filter(p=>p.c==c).length:D.items.length}</small></button>`).join("")}
+const gd=$("#grid"),calm=matchMedia("(prefers-reduced-motion:reduce)").matches;
+let cur=null;
+const hv=$("#hv");
+function hero(){const u=(D.hero||"").trim();if(!u){hv.hidden=true;return}
+ const v=/\.(mp4|webm|mov|m4v)(\?|#|$)/i.test(u);
+ hv.querySelector(".hm").innerHTML=v?`<video src="${esc(u)}" muted loop playsinline preload="metadata" ${calm?"controls":"autoplay"} aria-label="${esc(D.name)}"></video>`:`<img src="${esc(u)}" alt="${esc(D.name)}">`;
+ const x=hv.querySelector("video");if(x&&!calm){x.muted=true;const r=x.play();if(r&&r.catch)r.catch(()=>{})}
+ hv.hidden=false}
 gd.onpointermove=e=>{if(calm||e.pointerType!="mouse")return;const p=e.target.closest(".ph");if(p!==cur){if(cur)cur.style.transform="";cur=p}if(!p)return;const r=p.getBoundingClientRect();p.style.transform=`rotateY(${((e.clientX-r.left)/r.width-.5)*18}deg) rotateX(${(.5-(e.clientY-r.top)/r.height)*18}deg) scale(1.03)`};
 gd.onpointerleave=()=>{if(cur)cur.style.transform="";cur=null};
 const GOV="القاهرة,الجيزة,الإسكندرية,القليوبية,الشرقية,الدقهلية,الغربية,المنوفية,البحيرة,كفر الشيخ,دمياط,بورسعيد,الإسماعيلية,السويس,شمال سيناء,جنوب سيناء,الفيوم,بني سويف,المنيا,أسيوط,سوهاج,قنا,الأقصر,أسوان,البحر الأحمر,الوادي الجديد,مطروح".split(",");
@@ -411,5 +410,5 @@ function foot(){
  $("#fo").innerHTML=l.length?`<div class="fc">${l.map(([k,u])=>`<a class="fk" style="--sc:${SO[k].c}" href="${esc(u)}" target="_blank" rel="noopener" aria-label="${SO[k].n}"><svg class="fv" viewBox="${SO[k].v}" aria-hidden="true"><path d="${SO[k].p}"/></svg></a>`).join("")}</div>`:"";
 }
 addEventListener("hashchange",route);
-ring();tabs();upd();foot();spin();route();
+hero();tabs();upd();foot();route();
 </script></body></html>
