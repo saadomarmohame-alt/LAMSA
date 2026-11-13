@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>لوحة تحكم لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><style>
+:root{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--er:#b3261e;color-scheme:light;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.7 "IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+a{color:inherit}
+small{color:var(--mut)}
+.w{max-width:860px;margin:0 auto;padding:0 16px}
+header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--ln)}
+.hd{display:flex;align-items:center;gap:10px;padding-block:6px}
+.logo{font:700 32px/1.1 "Aref Ruqaa","Amiri",serif}
+.nav{display:flex;flex:1;overflow-x:auto;scrollbar-width:none}
+.nav button{border:0;border-bottom:2px solid transparent;background:none;padding:10px 12px;font-weight:600;white-space:nowrap;color:var(--mut)}
+.nav .on{color:var(--ink);border-color:var(--ink)}
+.b{border:1px solid var(--ink);background:none;padding:5px 14px;font-weight:600;font-size:14px;white-space:nowrap}
+.b:hover{background:var(--ink);color:var(--bg)}
+.b.p{background:var(--ink);color:#fff}
+.b.p:hover{background:none;color:var(--ink)}
+.b.x{border-color:var(--er);color:var(--er)}
+.b.x:hover{background:var(--er);color:#fff}
+.b:disabled{opacity:.4;cursor:default}
+h2{margin:26px 0 10px;display:flex;justify-content:space-between;align-items:center;font:700 26px/1.3 "Aref Ruqaa","Amiri",serif}
+.mt{color:var(--mut);text-align:center;padding:40px 0}
+.cd{background:var(--sf);border:1px solid var(--ln);padding:14px;margin-bottom:10px}
+.sts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:16px}
+.sts .cd{margin:0;color:var(--mut);font-size:13px}
+.sts b{display:block;color:var(--ink);font-size:22px;line-height:1.4}
+.fm{display:grid;gap:10px}
+.fm label{display:grid;gap:3px;font-size:13px;color:var(--mut)}
+input,select{width:100%;padding:8px 10px;border:1px solid var(--ln);border-radius:0;background:var(--bg)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.row>div{flex:1 1 140px}
+.row>select{width:auto}
+.th{width:52px;height:68px;flex:none;object-fit:cover;background:#e6e6e6;display:grid;place-items:center;color:var(--mut)}
+#ts{position:fixed;inset:auto 0 20px;margin:auto;width:max-content;max-width:90%;z-index:30;background:var(--ink);color:var(--bg);padding:8px 16px;font-size:14px}
+.lg{max-width:360px;margin:12vh auto 0}
+</style></head><body><div id="app"></div><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script><script>
+const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M9l49LIVJTjs4W4KmJgP0Q_Yy5FZd1r";
+const $=s=>document.querySelector(s),R=$("#app");
+const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
+const f=n=>(+n||0).toLocaleString("en-US")+" ج.م";
+const GOV="القاهرة,الجيزة,الإسكندرية,القليوبية,الشرقية,الدقهلية,الغربية,المنوفية,البحيرة,كفر الشيخ,دمياط,بورسعيد,الإسماعيلية,السويس,شمال سيناء,جنوب سيناء,الفيوم,بني سويف,المنيا,أسيوط,سوهاج,قنا,الأقصر,أسوان,البحر الأحمر,الوادي الجديد,مطروح".split(",");
+const ST={new:"جديد",done:"اتسلّم",cancel:"ملغي"},TABS={or:"الطلبات",pr:"المنتجات",sh:"الشحن",st:"الإعدادات"};
+const db=SB_URL&&SB_KEY&&window.supabase?supabase.createClient(SB_URL,SB_KEY):null;
+let S={name:"لمسة",wa:"",note:"",ship:60,sg:{},free:0,eta:"من 3 لـ 5 أيام عمل",codes:{},cats:[]},P=[],O=[],tab="or",ed=null,arm=null,blob=null,tt;
+const find=i=>P.find(x=>x.id==i),nn=()=>O.filter(o=>o.status=="new").length;
+function toast(m){let t=$("#ts");if(!t){t=document.createElement("div");t.id="ts";t.setAttribute("role","status");document.body.append(t)}t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>{t.hidden=true},2800)}
+async function pull(){
+ const [a,b,c]=await Promise.all([db.from("settings").select("data").eq("id",1).maybeSingle(),db.from("products").select("*").order("id",{ascending:false}),db.from("orders").select("*").order("id",{ascending:false}).limit(300)]);
+ const er=a.error||b.error||c.error;if(er)return toast("فشل التحميل: "+er.message);
+ if(a.data)Object.assign(S,a.data.data);S.cats=S.cats||[];P=b.data;O=c.data;
+}
+async function run(q,m){const r=await q;if(r.error)return toast("مشكلة: "+r.error.message);await pull();body();if(m)toast(m)}
+async function push(){const r=await db.from("settings").upsert({id:1,data:S});toast(r.error?"مشكلة: "+r.error.message:"اتحفظ")}
+function login(){R.innerHTML=`<div class="w"><div class="cd fm lg"><span class="logo">لمسة</span><label>الإيميل<input id="le" type="email" autocomplete="username"></label><label>الباسورد<input id="lp" type="password" autocomplete="current-password"></label><button class="b p" data-a="li">دخول</button></div></div>`}
+async function enter(){await pull();shell()}
+function shell(){
+ R.innerHTML=`<header><div class="w hd"><span class="logo">${esc(S.name)}</span><nav class="nav">${Object.entries(TABS).map(([k,v])=>`<button class="${k==tab?"on":""}" data-a="tab" data-v="${k}">${v}${k=="or"&&nn()?` (${nn()})`:""}</button>`).join("")}</nav><button class="b" data-a="lo">خروج</button></div></header><main class="w" id="bd" style="padding-bottom:60px"></main>`;body();
+}
+const body=()=>{$("#bd").innerHTML=V[tab]()};
+const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" value="${esc(ed.n)}"></label><div class="g2"><label>القسم<select id="ic">${S.cats.map(c=>`<option${c==ed.c?" selected":""}>${esc(c)}</option>`).join("")}</select></label><label>السعر (جنيه)<input id="ip" type="number" inputmode="numeric" min="1" value="${esc(ed.p)}"></label></div><div class="g2"><label>السعر قبل الخصم (اختياري)<input id="io" type="number" inputmode="numeric" min="0" value="${ed.o||""}"></label><label>المقاسات أو الدرجات (اختياري)<input id="iz" placeholder="S, M, L" value="${esc(ed.opt)}"></label></div><label>صورة المنتج<input id="ii" type="file" accept="image/*"></label><div id="pv">${ed.img?`<img class="th" src="${esc(ed.img)}" alt="">`:""}</div><div class="row"><button class="b p" id="spb" data-a="sp">حفظ المنتج</button><button class="b" data-a="cc">إلغاء</button></div></div>`;
+const V={
+ or(){
+  const day=new Date().toDateString(),ok=O.filter(o=>o.status!="cancel"),td=ok.filter(o=>new Date(o.created_at).toDateString()==day),sum=a=>a.reduce((s,o)=>s+o.total,0);
+  return `<div class="sts"><div class="cd">طلبات جديدة<b>${nn()}</b></div><div class="cd">طلبات النهاردة<b>${td.length}</b></div><div class="cd">مبيعات النهاردة<b>${f(sum(td))}</b></div><div class="cd">إجمالي المبيعات<b>${f(sum(ok))}</b></div></div><h2>الطلبات</h2>`+(O.map(o=>`<div class="cd"><div class="row"><b>#${o.id} ${esc(o.name)}</b><small style="flex:1">${new Date(o.created_at).toLocaleString("ar-EG")}</small><select data-s="${o.id}" aria-label="حالة الطلب">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${o.status==k?" selected":""}>${v}</option>`).join("")}</select></div><p style="margin:6px 0">${esc(o.address)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> | <a href="https://wa.me/20${esc(o.phone.slice(1))}" target="_blank" rel="noopener">واتساب</a></p>${(o.items||[]).map(i=>`<div>• ${esc(i.n)}${i.o?` (${esc(i.o)})`:""} × ${esc(i.q)}</div>`).join("")}<p style="margin:6px 0 0"><b>${f(o.total)}</b> <small>شحن ${f(o.shipping)}${o.discount?`، خصم ${f(o.discount)}${o.code?" ("+esc(o.code)+")":""}`:""}</small></p></div>`).join("")||`<p class="mt">لسه مفيش طلبات.</p>`);
+ },
+ pr(){return `<h2>المنتجات<button class="b p" data-a="nw">+ منتج جديد</button></h2>${ed?pform():""}`+(P.map(p=>`<div class="cd row">${p.img?`<img class="th" src="${esc(p.img)}" alt="">`:`<span class="th">${esc(p.n[0])}</span>`}<div><b>${esc(p.n)}</b><br><small>${esc(p.c)}، ${f(p.p)}${p.out?"، نفدت الكمية":""}</small></div><button class="b" data-a="edit" data-v="${p.id}">تعديل</button><button class="b" data-a="dup" data-v="${p.id}">نسخ</button><button class="b" data-a="so" data-v="${p.id}">${p.out?"إتاحة":"نفدت"}</button><button class="b x" data-a="del" data-v="${p.id}">${arm==p.id?"تأكيد الحذف":"حذف"}</button></div>`).join("")||`<p class="mt">لسه مفيش منتجات.</p>`)},
+ sh(){const sg=S.sg||{},d=S.ship==null?60:S.ship;
+  return `<h2>أسعار الشحن</h2><div class="cd fm"><label>سعر الشحن الافتراضي (للمحافظة اللي سعرها فاضي)<input id="ss" type="number" inputmode="numeric" min="0" value="${esc(d)}"></label><label>نفس السعر لكل المحافظات<span class="row"><input id="su" type="number" inputmode="numeric" min="0" placeholder="اكتب السعر" style="flex:1;width:auto"><button class="b" data-a="same">تطبيق على الكل</button></span></label><div class="g2">${GOV.map(g=>`<label>${g}<input data-g="${g}" type="number" inputmode="numeric" min="0" placeholder="${esc(d)}" value="${sg[g]==null?"":esc(sg[g])}"></label>`).join("")}</div><small>سيب الخانة فاضية عشان تاخد السعر الافتراضي، واكتب 0 لو الشحن ليها مجاني.</small><label>شحن مجاني لو الطلب وصل لـ (جنيه)، سيبه فاضي لو مش عايز<input id="sf" type="number" inputmode="numeric" min="0" value="${S.free>0?esc(S.free):""}"></label><label>مدة التوصيل<input id="se" value="${esc(S.eta)}"></label><button class="b p" data-a="sv">حفظ الشحن</button></div>`},
+ st(){return `<h2>إعدادات المتجر</h2><div class="cd fm"><label>اسم المتجر<input id="sn" value="${esc(S.name)}"></label><label>رقم واتساب لاستقبال الطلبات<input id="sw" inputmode="tel" value="${esc(S.wa)}"></label><label>الشريط العلوي (اختياري)<input id="so" value="${esc(S.note)}"></label><label>الأقسام (افصل بينها بفاصلة)<input id="sc" value="${esc(S.cats.join("، "))}"></label><label>أكواد الخصم (مثال: LAMSA10:10، EID:15، الرقم نسبة %)<input id="sd" value="${esc(Object.entries(S.codes||{}).map(a=>a.join(":")).join("، "))}"></label><button class="b p" data-a="sv">حفظ الإعدادات</button></div>`}
+};
+const A={
+ async li(){const r=await db.auth.signInWithPassword({email:$("#le").value.trim(),password:$("#lp").value});if(r.error)return toast("الإيميل أو الباسورد غلط");enter()},
+ async lo(){await db.auth.signOut();login()},
+ tab(v){tab=v;ed=null;arm=null;shell()},
+ nw(){ed={id:0,n:"",c:S.cats[0]||"",p:"",o:0,opt:"",img:"",out:false};blob=null;body()},
+ edit(v){ed={...find(v)};blob=null;body();scrollTo(0,0)},
+ cc(){ed=null;blob=null;body()},
+ async sp(){
+  const n=$("#in").value.trim(),p=+$("#ip").value;if(!n||!(p>0))return toast("اكتب اسم المنتج وسعره");
+  const b=$("#spb");b.disabled=true;
+  try{
+   let img=ed.img||"";
+   if(blob){const path=Date.now()+".jpg",u=await db.storage.from("products").upload(path,blob,{contentType:"image/jpeg"});if(u.error)throw u.error;img=db.storage.from("products").getPublicUrl(path).data.publicUrl}
+   const row={n,c:$("#ic").value,p,o:+$("#io").value||0,opt:$("#iz").value.trim(),img,out:!!ed.out},r=ed.id?await db.from("products").update(row).eq("id",ed.id):await db.from("products").insert(row);
+   if(r.error)throw r.error;
+   ed=null;blob=null;await pull();body();toast("اتحفظ المنتج");
+  }catch(x){b.disabled=false;toast("مشكلة: "+x.message)}
+ },
+ so(v){run(db.from("products").update({out:!find(v).out}).eq("id",v))},
+ dup(v){const {id,created_at,...p}=find(v);p.n+=" (نسخة)";run(db.from("products").insert(p),"اتنسخ")},
+ del(v){if(arm==v){arm=null;run(db.from("products").delete().eq("id",v),"اتحذف")}else{arm=v;body();setTimeout(()=>{if(arm==v){arm=null;body()}},3500)}},
+ same(){const v=$("#su").value;if(v==="")return toast("اكتب السعر الأول");document.querySelectorAll("[data-g]").forEach(i=>{i.value=Math.max(0,+v||0)});toast("اتطبق. دوس «حفظ الشحن»")},
+ sv(){
+  if(tab=="sh"){S.ship=Math.max(0,+$("#ss").value||0);S.sg={};document.querySelectorAll("[data-g]").forEach(i=>{if(i.value!=="")S.sg[i.dataset.g]=Math.max(0,+i.value||0)});S.free=Math.max(0,+$("#sf").value||0);S.eta=$("#se").value.trim()}
+  else{S.name=$("#sn").value.trim()||S.name;S.wa=$("#sw").value.replace(/\D/g,"").replace(/^0/,"20");S.note=$("#so").value.trim();S.cats=$("#sc").value.split(/[,،]/).map(s=>s.trim()).filter(Boolean);S.codes=Object.fromEntries($("#sd").value.split(/[,،]/).map(s=>s.trim().split(":")).filter(a=>a[0]&&+a[1]>0).map(a=>[a[0].trim().toUpperCase(),Math.min(+a[1],100)]))}
+  push();shell();
+ }
+};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-a]");if(b&&A[b.dataset.a])A[b.dataset.a](b.dataset.v)});
+document.addEventListener("keydown",e=>{if(e.key=="Enter"&&e.target.id=="lp")A.li()});
+document.addEventListener("change",async e=>{
+ const t=e.target;
+ if(t.id=="ii"){
+  const file=t.files[0];if(!file)return;
+  try{const b=await createImageBitmap(file),s=Math.min(1,900/Math.max(b.width,b.height)),c=document.createElement("canvas");c.width=Math.round(b.width*s);c.height=Math.round(b.height*s);c.getContext("2d").drawImage(b,0,0,c.width,c.height);blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.82));$("#pv").innerHTML=`<img class="th" src="${URL.createObjectURL(blob)}" alt="">`}catch(x){toast("جرّب صورة JPG أو PNG")}
+ }else if(t.dataset.s){
+  const r=await db.from("orders").update({status:t.value}).eq("id",t.dataset.s);
+  if(r.error)return toast("مشكلة: "+r.error.message);
+  O.find(o=>o.id==t.dataset.s).status=t.value;shell();toast("اتغيرت حالة الطلب");
+ }
+});
+(async()=>{
+ if(!db)return R.innerHTML=`<p class="mt">حط SB_URL و SB_KEY في أول السكربت جوه admin.html، وتأكد إنك فاتح الصفحة وفي نت.</p>`;
+ const {data}=await db.auth.getSession();data.session?enter():login();
+})();
+</script></body></html>
