@@ -285,22 +285,23 @@ small{color:var(--mut)}
 .os{display:flex;align-items:center;gap:14px;margin:16px 0 26px}
 .os h3{margin:0;font-size:17px;font-weight:700;line-height:1.4}
 .os p{margin:2px 0 0;color:var(--mut);font-size:13px}
+.os .ocr{margin-top:6px;color:var(--ink);font-weight:500}
 .oi{position:relative;flex:none;display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--ink);color:var(--bg)}
 .oi svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .oi::after{content:"";position:absolute;inset:-5px;border:2px solid var(--ink);border-radius:50%;opacity:0}
-.s-new .oi::after,.s-confirmed .oi::after,.s-shipped .oi::after{animation:ring 1.8s ease-out infinite}
+.s-new .oi::after,.s-confirmed .oi::after,.s-warehouse .oi::after,.s-shipped .oi::after{animation:ring 1.8s ease-out infinite}
 .s-confirmed .oi,.s-done .oi,.s-cancel .oi{animation:pop .55s cubic-bezier(.3,1.5,.5,1) both}
 .s-cancel .oi{background:#b3261e}
 .tr{transform:scaleX(-1)}
 .s-shipped .oi svg{animation:bob .55s ease-in-out infinite alternate}
-.tk{position:relative;display:grid;grid-template-columns:repeat(4,1fr);text-align:center}
-.tb{position:absolute;top:16px;inset-inline:12.5%;height:6px;margin-top:-3px;border-radius:99px;background:var(--ln);overflow:hidden}
+.tk{position:relative;display:grid;grid-template-columns:repeat(5,1fr);text-align:center}
+.tb{position:absolute;top:16px;inset-inline:10%;height:6px;margin-top:-3px;border-radius:99px;background:var(--ln);overflow:hidden}
 .tf{position:absolute;inset-block:0;inset-inline-start:0;width:var(--w);border-radius:inherit;background:var(--ink);animation:grow 1.3s cubic-bezier(.22,.8,.2,1) both}
 .tf.mv{background:repeating-linear-gradient(-45deg,var(--ink) 0 8px,#555 8px 16px);background-size:22.63px 22.63px;animation:grow 1.3s cubic-bezier(.22,.8,.2,1) both,slide .8s linear infinite}
 .st{position:relative;z-index:1;display:grid;justify-items:center;align-content:start;gap:8px}
 .nd{display:grid;place-items:center;width:32px;height:32px;border:2px solid var(--ln);border-radius:50%;background:var(--sf);color:#a3a3a3}
 .nd svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.st span{padding-inline:2px;color:var(--mut);font-size:11.5px;font-weight:500;line-height:1.4}
+.st span{padding-inline:1px;color:var(--mut);font-size:11px;font-weight:500;line-height:1.4}
 .st.on .nd{border-color:var(--ink);background:var(--ink);color:var(--bg);animation:lit .3s both;animation-delay:calc(var(--i)*.4s)}
 .st.on span{color:var(--ink);font-weight:600}
 .st.cur .nd{box-shadow:0 0 0 4px rgba(10,10,10,.14)}
@@ -525,11 +526,11 @@ function foot(){
 }
 /* ===== طلباتي ===== */
 const nrm=t=>String(t||"").toLowerCase().replace(/[\u064B-\u0652\u0640]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[\s\-_]+/g," ").trim();
-const NSM={};[["new","new","pending","placed","جديد","قيد الانتظار"],["confirmed","confirmed","confirm","accepted","approved","processing","تم التاكيد","مؤكد","تاكيد","قيد التجهيز","تم التجهيز"],["shipped","shipped","shipping","dispatched","out for delivery","تم الشحن","في الطريق","خرج للتوصيل","قيد الشحن"],["done","done","delivered","completed","complete","تم التسليم","تم التوصيل","اتسلم","تم الاستلام"],["cancel","cancel","cancelled","canceled","rejected","ملغي","ملغى","تم الالغاء","مرفوض"]].forEach(a=>a.slice(1).forEach(x=>NSM[nrm(x)]=a[0]));
-function nst(v){const n=nrm(v);if(NSM[n])return NSM[n];return /cancel|ملغ|الغ|رفض/.test(n)?"cancel":/ship|dispatch|out for|شحن|طريق/.test(n)?"shipped":/deliver|done|complete|سلم|تسليم|وصل/.test(n)?"done":/confirm|accept|process|اكيد|مؤكد|جهز|تجهيز/.test(n)?"confirmed":/new|pending|جديد|انتظار/.test(n)?"new":""}
-const OKI={new:0,confirmed:1,shipped:2,done:3},XI="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9l6 6m0-6-6 6";
-const STP=[["استلمنا الطلب","M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"],["تم التأكيد","M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 12.5l2.8 2.8 5.7-5.8"],["تم الشحن","M3 6h11v10H3zM14 9h4l3 3v4h-7zM9.3 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0zM18.8 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0z"],["اتسلّم","M4 11 12 4l8 7v9H4zM9 15l2.2 2.2L15.5 13"]];
-const INF={new:["استلمنا طلبك","هنكلّمك على موبايلك لتأكيد الطلب والشحن."],confirmed:["اتأكّد طلبك","بنجهّز الطلب وهيتشحن قريب."],shipped:["طلبك في الطريق","الشحنة خرجت للتوصيل، خلّي موبايلك مفتوح."],done:["اتسلّم الطلب","نتمنى المنتجات تعجبك."],cancel:["الطلب اتلغى","لو عايز تعرف السبب أو تعيد الطلب، كلّمنا على واتساب."]};
+const NSM={};[["new","new","pending","placed","جديد","قيد الانتظار"],["confirmed","confirmed","confirm","accepted","approved","processing","تم التاكيد","مؤكد","تاكيد","قيد التجهيز","تم التجهيز"],["warehouse","warehouse","in warehouse","at warehouse","المستودع","في المستودع","اتشحن للمستودع","تم الشحن للمستودع","وصل المستودع"],["shipped","shipped","shipping","dispatched","out for delivery","تم الشحن","في الطريق","خرج للتوصيل","قيد الشحن"],["done","done","delivered","completed","complete","تم التسليم","تم التوصيل","اتسلم","تم الاستلام"],["cancel","cancel","cancelled","canceled","rejected","ملغي","ملغى","تم الالغاء","مرفوض"]].forEach(a=>a.slice(1).forEach(x=>NSM[nrm(x)]=a[0]));
+function nst(v){const n=nrm(v);if(NSM[n])return NSM[n];return /cancel|ملغ|الغ|رفض/.test(n)?"cancel":/warehouse|مستودع|مخزن/.test(n)?"warehouse":/ship|dispatch|out for|شحن|طريق/.test(n)?"shipped":/deliver|done|complete|سلم|تسليم|وصل/.test(n)?"done":/confirm|accept|process|اكيد|مؤكد|جهز|تجهيز/.test(n)?"confirmed":/new|pending|جديد|انتظار/.test(n)?"new":""}
+const OKI={new:0,confirmed:1,warehouse:2,shipped:3,done:4},XI="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9l6 6m0-6-6 6";
+const STP=[["استلمنا الطلب","M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"],["تم التأكيد","M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 12.5l2.8 2.8 5.7-5.8"],["المستودع","M3 9.5 12 4l9 5.5V20H3zM7 20v-5h10v5M7 17.5h10"],["تم الشحن","M3 6h11v10H3zM14 9h4l3 3v4h-7zM9.3 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0zM18.8 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0z"],["اتسلّم","M6 8h12l1 13H5zM9 8a3 3 0 0 1 6 0M9.5 15l2 2 3.5-3.5"]];
+const INF={new:["استلمنا طلبك","هنكلّمك على موبايلك لتأكيد الطلب والشحن."],confirmed:["اتأكّد طلبك","بنجهّز الطلب وهيتشحن قريب."],warehouse:["طلبك اتشحن للمستودع","الطلب وصل مستودع الشحن وهيتسلّم لشركة الشحن قريب."],shipped:["طلبك في الطريق","الشحنة خرجت للتوصيل، خلّي موبايلك مفتوح."],done:["اتسلّم الطلب","نتمنى المنتجات تعجبك."],cancel:["الطلب اتلغى","لو عايز تعرف السبب أو تعيد الطلب، كلّمنا على واتساب."]};
 const osvg=(d,c)=>`<svg viewBox="0 0 24 24" class="${c||""}" aria-hidden="true"><path d="${d}"/></svg>`;
 const dg=t=>String(t||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g,d=>"۰۱۲۳۴۵۶۷۸۹".indexOf(d));
 const odate=t=>{try{return new Date(t).toLocaleDateString("ar-EG-u-nu-latn",{day:"numeric",month:"long",year:"numeric"})}catch(e){return""}};
@@ -540,7 +541,7 @@ async function fetchOrd(r,p){
  try{
   let x=await fetch(SB_URL+"/rest/v1/rpc/track_order",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_ref:r,p_phone:p}),cache:"no-store"});
   if(x.ok){const j=await x.json();return j&&j.ref?j:{err:"nf"}}
-  x=await fetch(SB_URL+"/rest/v1/orders?ref=eq."+encodeURIComponent(r)+"&phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&limit=1",{headers:H,cache:"no-store"});
+  x=await fetch(SB_URL+"/rest/v1/orders?ref=eq."+encodeURIComponent(r)+"&phone=eq."+encodeURIComponent(p)+"&select=ref,status,carrier,created_at,items,subtotal,shipping,discount,total&limit=1",{headers:H,cache:"no-store"});
   if(!x.ok)return{err:"net"};
   const a=await x.json();return a&&a[0]?a[0]:{err:"nf"}
  }catch(e){return{err:"net"}}
@@ -551,7 +552,7 @@ async function fetchByPhone(p){
  try{
   let x=await fetch(SB_URL+"/rest/v1/rpc/track_orders_by_phone",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_phone:p}),cache:"no-store"});
   if(x.ok){const j=await x.json();return Array.isArray(j)?j:[]}
-  x=await fetch(SB_URL+"/rest/v1/orders?phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&order=created_at.desc&limit=10",{headers:H,cache:"no-store"});
+  x=await fetch(SB_URL+"/rest/v1/orders?phone=eq."+encodeURIComponent(p)+"&select=ref,status,carrier,created_at,items,subtotal,shipping,discount,total&order=created_at.desc&limit=10",{headers:H,cache:"no-store"});
   if(!x.ok)return null;const a=await x.json();return Array.isArray(a)?a:[]
  }catch(e){return null}
 }
@@ -564,11 +565,11 @@ function oshell(){
 function ocard(o){
  const r=o.r,rm=`<button class="orm" data-a="orm" data-v="${esc(r)}">إخفاء من القائمة</button>`;
  if(o.err)return `<article class="oc"><div class="ot"><b dir="ltr">${esc(r)}</b>${rm}</div><p class="mt" style="padding:14px 0 0">${o.err=="nf"?"مش لاقيين الطلب ده. راجع الكود ورقم الموبايل.":"مقدرناش نحمّل حالة الطلب. جرّب تدوس تحديث."}</p></article>`;
- const raw=String(o.status==null?"":o.status).trim(),k=raw?nst(raw):"new",s=k||"new",i=OKI[s]??0,w=s=="done"?100:(i+.5)/3*100,inf=k?INF[s]:["حالة الطلب: "+raw,"بنحدّث حالة طلبك، وتقدر تكلّمنا على واتساب لو محتاج."];
- const tk=s=="cancel"?"":`<div class="tk" role="img" aria-label="مراحل الطلب، المرحلة الحالية: ${STP[i][0]}"><div class="tb"><div class="tf${i<3?" mv":""}" style="--w:${w}%"></div></div>${STP.map((x,k)=>`<div class="st${k<=i?" on":""}${k==i?" cur":""}" style="--i:${k}"><div class="nd">${osvg(x[1],k==2?"tr":"")}</div><span>${x[0]}</span></div>`).join("")}</div>`;
+ const raw=String(o.status==null?"":o.status).trim(),k=raw?nst(raw):"new",s=k||"new",i=OKI[s]??0,w=s=="done"?100:(i+.5)/4*100,inf=k?INF[s]:["حالة الطلب: "+raw,"بنحدّث حالة طلبك، وتقدر تكلّمنا على واتساب لو محتاج."];
+ const tk=s=="cancel"?"":`<div class="tk" role="img" aria-label="مراحل الطلب، المرحلة الحالية: ${STP[i][0]}"><div class="tb"><div class="tf${i<4?" mv":""}" style="--w:${w}%"></div></div>${STP.map((x,k)=>`<div class="st${k<=i?" on":""}${k==i?" cur":""}" style="--i:${k}"><div class="nd">${osvg(x[1],k==3?"tr":"")}</div><span>${x[0]}</span></div>`).join("")}</div>`;
  const its=(Array.isArray(o.items)?o.items:[]).map(x=>`<div class="ol"><span>${esc(x.n)}${x.o?` <small>(${esc(x.o)})</small>`:""} × ${esc(x.q)}</span>${x.p?`<span>${f(x.p*x.q)}</span>`:""}</div>`).join("");
  const wa=D.wa?`<a class="obt" href="https://wa.me/${esc(String(D.wa).replace(/\D/g,""))}?text=${encodeURIComponent("بسأل عن طلبي كود "+r)}" target="_blank" rel="noopener">كلّمنا على واتساب</a>`:"";
- return `<article class="oc s-${s}"><div class="ot"><b dir="ltr">${esc(r)}</b><small>${odate(o.created_at)}</small></div><div class="os"><div class="oi">${osvg(s=="cancel"?XI:STP[i][1],s=="shipped"?"tr":"")}</div><div><h3>${esc(inf[0])}</h3><p>${esc(inf[1])}</p></div></div>${tk}<details class="od2"><summary><span>تفاصيل الطلب</span><b>${f(o.total)}</b></summary>${its}<div class="otl"><span>المجموع الفرعي</span><span>${f(o.subtotal)}</span></div>${+o.discount>0?`<div class="otl"><span>خصم</span><span>- ${f(o.discount)}</span></div>`:""}<div class="otl"><span>الشحن</span><span>${+o.shipping?f(o.shipping):"مجاني"}</span></div><div class="otl g"><span>الإجمالي</span><span>${f(o.total)}</span></div></details><div class="oa">${wa}${rm}</div></article>`;
+ return `<article class="oc s-${s}"><div class="ot"><b dir="ltr">${esc(r)}</b><small>${odate(o.created_at)}</small></div><div class="os"><div class="oi">${osvg(s=="cancel"?XI:STP[i][1],s=="shipped"?"tr":"")}</div><div><h3>${esc(inf[0])}</h3><p>${esc(inf[1])}</p>${s!="cancel"&&o.carrier?`<p class="ocr">شركة الشحن: ${esc(o.carrier)}</p>`:""}</div></div>${tk}<details class="od2"><summary><span>تفاصيل الطلب</span><b>${f(o.total)}</b></summary>${its}<div class="otl"><span>المجموع الفرعي</span><span>${f(o.subtotal)}</span></div>${+o.discount>0?`<div class="otl"><span>خصم</span><span>- ${f(o.discount)}</span></div>`:""}<div class="otl"><span>الشحن</span><span>${+o.shipping?f(o.shipping):"مجاني"}</span></div><div class="otl g"><span>الإجمالي</span><span>${f(o.total)}</span></div></details><div class="oa">${wa}${rm}</div></article>`;
 }
 function paint(){
  if(view!="o")return;const l=$("#ol");if(!l)return;

@@ -45,7 +45,7 @@ const $=s=>document.querySelector(s),R=$("#app");
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
 const f=n=>(+n||0).toLocaleString("en-US")+" ج.م";
 const GOV="القاهرة,الجيزة,الإسكندرية,القليوبية,الشرقية,الدقهلية,الغربية,المنوفية,البحيرة,كفر الشيخ,دمياط,بورسعيد,الإسماعيلية,السويس,شمال سيناء,جنوب سيناء,الفيوم,بني سويف,المنيا,أسيوط,سوهاج,قنا,الأقصر,أسوان,البحر الأحمر,الوادي الجديد,مطروح".split(",");
-const ST={new:"جديد",confirmed:"تم التأكيد",shipped:"تم الشحن",done:"اتسلّم",cancel:"ملغي"},TABS={or:"الطلبات",pr:"المنتجات",sh:"الشحن",st:"الإعدادات"};
+const ST={new:"جديد",confirmed:"تم التأكيد",warehouse:"اتشحن للمستودع",shipped:"تم الشحن",done:"اتسلّم",cancel:"ملغي"},TABS={or:"الطلبات",pr:"المنتجات",sh:"الشحن",st:"الإعدادات"};
 const db=SB_URL&&SB_KEY&&window.supabase?supabase.createClient(SB_URL,SB_KEY):null;
 let S={name:"لمسة",wa:"",note:"",ship:60,sg:{},free:0,eta:"من 3 لـ 5 أيام عمل",codes:{},cats:[]},P=[],O=[],tab="or",ed=null,arm=null,blob=null,TG={},tt;
 const IM=v=>{if(!v)return[];if(v[0]=="[")try{return JSON.parse(v)}catch(e){}return[v]};
@@ -70,7 +70,7 @@ const pform=()=>`<div class="cd fm"><label>اسم المنتج<input id="in" val
 const V={
  or(){
   const day=new Date().toDateString(),ok=O.filter(o=>o.status!="cancel"),td=ok.filter(o=>new Date(o.created_at).toDateString()==day),sum=a=>a.reduce((s,o)=>s+o.total,0);
-  return `<div class="sts"><div class="cd">طلبات جديدة<b>${nn()}</b></div><div class="cd">طلبات النهاردة<b>${td.length}</b></div><div class="cd">مبيعات النهاردة<b>${f(sum(td))}</b></div><div class="cd">إجمالي المبيعات<b>${f(sum(ok))}</b></div></div><h2>الطلبات</h2>`+(O.map(o=>`<div class="cd"><div class="row"><b>${esc(o.ref||"#"+o.id)} · ${esc(o.name)}</b><small style="flex:1">${new Date(o.created_at).toLocaleString("ar-EG")}</small><select data-s="${o.id}" aria-label="حالة الطلب">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${o.status==k?" selected":""}>${v}</option>`).join("")}</select></div><p style="margin:6px 0">${esc(o.address)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> | <a href="https://wa.me/20${esc(o.phone.slice(1))}" target="_blank" rel="noopener">واتساب</a></p>${(o.items||[]).map(i=>`<div>• ${esc(i.n)}${i.o?` (${esc(i.o)})`:""} × ${esc(i.q)}</div>`).join("")}${o.payment=="card"?`<div><small>مدفوع بالكارت: ${esc((o.card_brand||"").toUpperCase())} ••${esc(o.card_last4||"")}</small></div>`:""}<p style="margin:6px 0 0"><b>${f(o.total)}</b> <small>شحن ${f(o.shipping)}${o.discount?`، خصم ${f(o.discount)}${o.code?" ("+esc(o.code)+")":""}`:""}</small></p></div>`).join("")||`<p class="mt">لسه مفيش طلبات.</p>`);
+  return `<div class="sts"><div class="cd">طلبات جديدة<b>${nn()}</b></div><div class="cd">طلبات النهاردة<b>${td.length}</b></div><div class="cd">مبيعات النهاردة<b>${f(sum(td))}</b></div><div class="cd">إجمالي المبيعات<b>${f(sum(ok))}</b></div></div><h2>الطلبات</h2>`+(O.map(o=>`<div class="cd"><div class="row"><b>${esc(o.ref||"#"+o.id)} · ${esc(o.name)}</b><small style="flex:1">${new Date(o.created_at).toLocaleString("ar-EG")}</small><select data-s="${o.id}" aria-label="حالة الطلب">${Object.entries(ST).map(([k,v])=>`<option value="${k}"${o.status==k?" selected":""}>${v}</option>`).join("")}</select></div><div class="row" style="margin-top:6px"><input data-c="${o.id}" value="${esc(o.carrier)}" placeholder="شركة الشحن (اختياري) مثال: بوسطة، أرامكس" maxlength="60" aria-label="شركة الشحن"></div><p style="margin:6px 0">${esc(o.address)}<br><a href="tel:${esc(o.phone)}">${esc(o.phone)}</a> | <a href="https://wa.me/20${esc(o.phone.slice(1))}" target="_blank" rel="noopener">واتساب</a></p>${(o.items||[]).map(i=>`<div>• ${esc(i.n)}${i.o?` (${esc(i.o)})`:""} × ${esc(i.q)}</div>`).join("")}${o.payment=="card"?`<div><small>مدفوع بالكارت: ${esc((o.card_brand||"").toUpperCase())} ••${esc(o.card_last4||"")}</small></div>`:""}<p style="margin:6px 0 0"><b>${f(o.total)}</b> <small>شحن ${f(o.shipping)}${o.discount?`، خصم ${f(o.discount)}${o.code?" ("+esc(o.code)+")":""}`:""}</small></p></div>`).join("")||`<p class="mt">لسه مفيش طلبات.</p>`);
  },
  pr(){return `<h2>المنتجات<button class="b p" data-a="nw">+ منتج جديد</button></h2>${ed?pform():""}`+(P.map(p=>`<div class="cd row">${IM(p.img)[0]?`<img class="th" src="${esc(IM(p.img)[0])}" alt="">`:`<span class="th">${esc(p.n[0])}</span>`}<div><b>${esc(p.n)}</b><br><small>${esc(p.c)}، ${f(p.p)}${p.out?`، <b style="color:var(--er)">نفدت الكمية</b>`:""}</small></div><button class="b" data-a="edit" data-v="${p.id}">تعديل</button><button class="b" data-a="dup" data-v="${p.id}">نسخ</button><button class="b" data-a="so" data-v="${p.id}">${p.out?"إتاحة":"نفدت"}</button><button class="b x" data-a="del" data-v="${p.id}">${arm==p.id?"تأكيد الحذف":"حذف"}</button></div>`).join("")||`<p class="mt">لسه مفيش منتجات.</p>`)},
  sh(){const sg=S.sg||{},d=S.ship==null?60:S.ship;
@@ -121,6 +121,10 @@ document.addEventListener("change",async e=>{
   const r=await db.from("orders").update({status:t.value}).eq("id",t.dataset.s);
   if(r.error)return toast("مشكلة: "+r.error.message);
   O.find(o=>o.id==t.dataset.s).status=t.value;shell();toast("اتغيرت حالة الطلب");
+ }else if(t.dataset.c){
+  const v=t.value.trim().slice(0,60),r=await db.from("orders").update({carrier:v||null}).eq("id",t.dataset.c);
+  if(r.error)return toast("مشكلة: "+r.error.message);
+  O.find(o=>o.id==t.dataset.c).carrier=v||null;toast(v?"اتحفظت شركة الشحن":"اتمسحت شركة الشحن");
  }
 });
 (async()=>{
