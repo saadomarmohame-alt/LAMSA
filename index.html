@@ -524,6 +524,9 @@ function foot(){
  $("#fo").innerHTML=l.length?`<div class="fc">${l.map(([k,u])=>`<a class="fk" style="--sc:${SO[k].c}" href="${esc(u)}" target="_blank" rel="noopener" aria-label="${SO[k].n}"><svg class="fv" viewBox="${SO[k].v}" aria-hidden="true"><path d="${SO[k].p}"/></svg></a>`).join("")}</div>`:"";
 }
 /* ===== طلباتي ===== */
+const nrm=t=>String(t||"").toLowerCase().replace(/[\u064B-\u0652\u0640]/g,"").replace(/[أإآ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[\s\-_]+/g," ").trim();
+const NSM={};[["new","new","pending","placed","جديد","قيد الانتظار"],["confirmed","confirmed","confirm","accepted","approved","processing","تم التاكيد","مؤكد","تاكيد","قيد التجهيز","تم التجهيز"],["shipped","shipped","shipping","dispatched","out for delivery","تم الشحن","في الطريق","خرج للتوصيل","قيد الشحن"],["done","done","delivered","completed","complete","تم التسليم","تم التوصيل","اتسلم","تم الاستلام"],["cancel","cancel","cancelled","canceled","rejected","ملغي","ملغى","تم الالغاء","مرفوض"]].forEach(a=>a.slice(1).forEach(x=>NSM[nrm(x)]=a[0]));
+function nst(v){const n=nrm(v);if(NSM[n])return NSM[n];return /cancel|ملغ|الغ|رفض/.test(n)?"cancel":/ship|dispatch|out for|شحن|طريق/.test(n)?"shipped":/deliver|done|complete|سلم|تسليم|وصل/.test(n)?"done":/confirm|accept|process|اكيد|مؤكد|جهز|تجهيز/.test(n)?"confirmed":/new|pending|جديد|انتظار/.test(n)?"new":""}
 const OKI={new:0,confirmed:1,shipped:2,done:3},XI="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM9 9l6 6m0-6-6 6";
 const STP=[["استلمنا الطلب","M3 7.5 12 3l9 4.5v9L12 21l-9-4.5zM3 7.5 12 12l9-4.5M12 12v9"],["تم التأكيد","M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM8 12.5l2.8 2.8 5.7-5.8"],["تم الشحن","M3 6h11v10H3zM14 9h4l3 3v4h-7zM9.3 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0zM18.8 17.5a1.8 1.8 0 1 1-3.6 0 1.8 1.8 0 0 1 3.6 0z"],["اتسلّم","M4 11 12 4l8 7v9H4zM9 15l2.2 2.2L15.5 13"]];
 const INF={new:["استلمنا طلبك","هنكلّمك على موبايلك لتأكيد الطلب والشحن."],confirmed:["اتأكّد طلبك","بنجهّز الطلب وهيتشحن قريب."],shipped:["طلبك في الطريق","الشحنة خرجت للتوصيل، خلّي موبايلك مفتوح."],done:["اتسلّم الطلب","نتمنى المنتجات تعجبك."],cancel:["الطلب اتلغى","لو عايز تعرف السبب أو تعيد الطلب، كلّمنا على واتساب."]};
@@ -535,9 +538,9 @@ const ordStore=a=>{try{localStorage.setItem("ords",JSON.stringify(a.slice(0,20))
 function saveOrd(r,p){ordStore([{r,p},...ordSaved().filter(x=>x.r!=r)]);ordHset(ordH().filter(x=>x!=r))}
 async function fetchOrd(r,p){
  try{
-  let x=await fetch(SB_URL+"/rest/v1/rpc/track_order",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_ref:r,p_phone:p})});
+  let x=await fetch(SB_URL+"/rest/v1/rpc/track_order",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_ref:r,p_phone:p}),cache:"no-store"});
   if(x.ok){const j=await x.json();return j&&j.ref?j:{err:"nf"}}
-  x=await fetch(SB_URL+"/rest/v1/orders?ref=eq."+encodeURIComponent(r)+"&phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&limit=1",{headers:H});
+  x=await fetch(SB_URL+"/rest/v1/orders?ref=eq."+encodeURIComponent(r)+"&phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&limit=1",{headers:H,cache:"no-store"});
   if(!x.ok)return{err:"net"};
   const a=await x.json();return a&&a[0]?a[0]:{err:"nf"}
  }catch(e){return{err:"net"}}
@@ -546,11 +549,11 @@ const ordH=()=>{try{const a=JSON.parse(localStorage.getItem("ordh")||"[]");retur
 const ordHset=a=>{try{localStorage.setItem("ordh",JSON.stringify(a.slice(0,50)))}catch(e){}};
 async function fetchByPhone(p){
  try{
-  let x=await fetch(SB_URL+"/rest/v1/rpc/track_orders_by_phone",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_phone:p})});
+  let x=await fetch(SB_URL+"/rest/v1/rpc/track_orders_by_phone",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_phone:p}),cache:"no-store"});
   if(x.ok){const j=await x.json();return Array.isArray(j)?j:[]}
-  x=await fetch(SB_URL+"/rest/v1/orders?phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&order=created_at.desc&limit=10",{headers:H});
-  if(!x.ok)return[];const a=await x.json();return Array.isArray(a)?a:[]
- }catch(e){return[]}
+  x=await fetch(SB_URL+"/rest/v1/orders?phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&order=created_at.desc&limit=10",{headers:H,cache:"no-store"});
+  if(!x.ok)return null;const a=await x.json();return Array.isArray(a)?a:[]
+ }catch(e){return null}
 }
 const myPhone=()=>{try{return JSON.parse(localStorage.getItem("info")||"{}").fp||""}catch(e){return""}};
 let OD=[],odL=false,odS="",odT=0;
@@ -561,11 +564,11 @@ function oshell(){
 function ocard(o){
  const r=o.r,rm=`<button class="orm" data-a="orm" data-v="${esc(r)}">إخفاء من القائمة</button>`;
  if(o.err)return `<article class="oc"><div class="ot"><b dir="ltr">${esc(r)}</b>${rm}</div><p class="mt" style="padding:14px 0 0">${o.err=="nf"?"مش لاقيين الطلب ده. راجع الكود ورقم الموبايل.":"مقدرناش نحمّل حالة الطلب. جرّب تدوس تحديث."}</p></article>`;
- const s=o.status=="cancel"?"cancel":OKI[o.status]!=null?o.status:"new",i=OKI[s],w=i==3?100:(i+.5)/3*100;
+ const raw=String(o.status==null?"":o.status).trim(),k=raw?nst(raw):"new",s=k||"new",i=OKI[s]??0,w=s=="done"?100:(i+.5)/3*100,inf=k?INF[s]:["حالة الطلب: "+raw,"بنحدّث حالة طلبك، وتقدر تكلّمنا على واتساب لو محتاج."];
  const tk=s=="cancel"?"":`<div class="tk" role="img" aria-label="مراحل الطلب، المرحلة الحالية: ${STP[i][0]}"><div class="tb"><div class="tf${i<3?" mv":""}" style="--w:${w}%"></div></div>${STP.map((x,k)=>`<div class="st${k<=i?" on":""}${k==i?" cur":""}" style="--i:${k}"><div class="nd">${osvg(x[1],k==2?"tr":"")}</div><span>${x[0]}</span></div>`).join("")}</div>`;
  const its=(Array.isArray(o.items)?o.items:[]).map(x=>`<div class="ol"><span>${esc(x.n)}${x.o?` <small>(${esc(x.o)})</small>`:""} × ${esc(x.q)}</span>${x.p?`<span>${f(x.p*x.q)}</span>`:""}</div>`).join("");
  const wa=D.wa?`<a class="obt" href="https://wa.me/${esc(String(D.wa).replace(/\D/g,""))}?text=${encodeURIComponent("بسأل عن طلبي كود "+r)}" target="_blank" rel="noopener">كلّمنا على واتساب</a>`:"";
- return `<article class="oc s-${s}"><div class="ot"><b dir="ltr">${esc(r)}</b><small>${odate(o.created_at)}</small></div><div class="os"><div class="oi">${osvg(s=="cancel"?XI:STP[i][1],s=="shipped"?"tr":"")}</div><div><h3>${INF[s][0]}</h3><p>${INF[s][1]}</p></div></div>${tk}<details class="od2"><summary><span>تفاصيل الطلب</span><b>${f(o.total)}</b></summary>${its}<div class="otl"><span>المجموع الفرعي</span><span>${f(o.subtotal)}</span></div>${+o.discount>0?`<div class="otl"><span>خصم</span><span>- ${f(o.discount)}</span></div>`:""}<div class="otl"><span>الشحن</span><span>${+o.shipping?f(o.shipping):"مجاني"}</span></div><div class="otl g"><span>الإجمالي</span><span>${f(o.total)}</span></div></details><div class="oa">${wa}${rm}</div></article>`;
+ return `<article class="oc s-${s}"><div class="ot"><b dir="ltr">${esc(r)}</b><small>${odate(o.created_at)}</small></div><div class="os"><div class="oi">${osvg(s=="cancel"?XI:STP[i][1],s=="shipped"?"tr":"")}</div><div><h3>${esc(inf[0])}</h3><p>${esc(inf[1])}</p></div></div>${tk}<details class="od2"><summary><span>تفاصيل الطلب</span><b>${f(o.total)}</b></summary>${its}<div class="otl"><span>المجموع الفرعي</span><span>${f(o.subtotal)}</span></div>${+o.discount>0?`<div class="otl"><span>خصم</span><span>- ${f(o.discount)}</span></div>`:""}<div class="otl"><span>الشحن</span><span>${+o.shipping?f(o.shipping):"مجاني"}</span></div><div class="otl g"><span>الإجمالي</span><span>${f(o.total)}</span></div></details><div class="oa">${wa}${rm}</div></article>`;
 }
 function paint(){
  if(view!="o")return;const l=$("#ol");if(!l)return;
@@ -575,16 +578,19 @@ async function load(quiet){
  const t=++odT,sv=ordSaved(),hid=ordH();
  const ph=[...new Set([...sv.map(x=>x.p),myPhone()])].filter(p=>/^01\d{9}$/.test(p));
  if(!quiet){odL=true;if(!OD.length)paint()}
- const byp=await Promise.all(ph.map(async p=>({p,l:await fetchByPhone(p)}))),have={};
- byp.forEach(x=>x.l.forEach(o=>{if(o&&o.ref&&!hid.includes(o.ref))have[o.ref]={...o,r:o.ref,p:x.p}}));
+ const byp=await Promise.all(ph.map(async p=>({p,l:await fetchByPhone(p)}))),have={},fail=byp.some(x=>x.l===null);
+ byp.forEach(x=>(x.l||[]).forEach(o=>{if(o&&o.ref&&!hid.includes(o.ref))have[o.ref]={...o,r:o.ref,p:x.p}}));
  const rest=sv.filter(x=>!have[x.r]&&!hid.includes(x.r)).slice(0,10);
  const more=await Promise.all(rest.map(async x=>({...x,...await fetchOrd(x.r,x.p)})));
- const res=[...Object.values(have),...more].sort((a,b)=>String(b.created_at||"").localeCompare(String(a.created_at||"")));
+ let res=[...Object.values(have),...more];
+ if(fail||res.some(o=>o.err=="net")){const m={};res.forEach(o=>m[o.r]=o);OD.forEach(o=>{if(!o.err&&!hid.includes(o.r)&&(!m[o.r]||m[o.r].err=="net"))m[o.r]=o});res=Object.values(m)}
+ res.sort((a,b)=>String(b.created_at||"").localeCompare(String(a.created_at||"")));
  if(t!=odT)return;odL=false;
  const j=JSON.stringify(res);if(!quiet||j!=odS){OD=res;odS=j;paint()}
 }
 function ords(){oshell();OD=[];odS="";load()}
-setInterval(()=>{if(view=="o"&&!document.hidden&&!odL&&OD.some(o=>!o.err&&o.status!="done"&&o.status!="cancel"))load(true)},30000);
+setInterval(()=>{if(view=="o"&&!document.hidden&&!odL&&(!OD.length||OD.some(o=>o.err||(nst(o.status)||"new")!="done"&&nst(o.status)!="cancel")))load(true)},15000);
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&view=="o")load(true)});addEventListener("focus",()=>{if(view=="o")load(true)});
 Object.assign(A,{
  orders(){done=null;document.body.classList.remove("open","menu");if(location.hash=="#orders")load();else location.hash="orders"},
  orf(){load()},
