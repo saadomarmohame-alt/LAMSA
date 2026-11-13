@@ -34,7 +34,7 @@ h2{margin:28px 0 12px;font-size:13px;font-weight:700;line-height:1.3}
 .ph{position:relative;border-radius:8px;aspect-ratio:3/4;display:grid;place-items:center;background:var(--ph);font:700 80px/1 "Aref Ruqaa","Amiri",serif;transform-style:preserve-3d;transition:transform .12s ease-out,box-shadow .2s}
 .ph span{transform:translateZ(34px)}
 .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}
-.ph em{position:absolute;inset:auto 0 0;border-radius:0 0 8px 8px;background:var(--ink);color:var(--bg);font:500 12px/1.2 "IBM Plex Sans Arabic",sans-serif;padding:6px}
+.ph em{position:absolute;inset:auto 0 0;border-radius:0 0 8px 8px;background:#b3261e;color:#fff;font:500 12px/1.2 "IBM Plex Sans Arabic",sans-serif;padding:6px}
 .it h3{margin:10px 0 2px;font-size:13px;font-weight:700;line-height:1.5}
 .pr{display:flex;justify-content:center;gap:8px;align-items:baseline;font-size:13px}
 .pr s{color:var(--mut);font-size:12px}
@@ -84,13 +84,14 @@ small{color:var(--mut)}
 .mn{position:relative;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:var(--ph);display:grid;place-items:center;font:700 120px/1 "Aref Ruqaa","Amiri",serif}
 .mn[data-a]{cursor:pointer}
 .mn img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.mn em{position:absolute;inset:auto 0 0;background:var(--ink);color:var(--bg);font:500 12px/1.2 "IBM Plex Sans Arabic",sans-serif;padding:6px;text-align:center}
+.mn em{position:absolute;inset:auto 0 0;background:#b3261e;color:#fff;font:500 12px/1.2 "IBM Plex Sans Arabic",sans-serif;padding:6px;text-align:center}
 .tm{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px}
 .tm button{flex:none;width:64px;height:84px;padding:0;border:2px solid transparent;border-radius:8px;overflow:hidden;opacity:.6;background:var(--ph)}
 .tm .on{border-color:var(--ink);opacity:1}
 .tm img{display:block;width:100%;height:100%;object-fit:cover}
 .pi h1{margin:0 0 4px;font-size:24px;line-height:1.4}
 .pi .pr{justify-content:flex-start;font-size:18px;margin-top:8px}
+.pi .mt{color:#b3261e;font-weight:700;text-align:start;padding:14px 0}
 .pi .op{justify-content:flex-start}
 .ck #root>:not(#ckv){display:none!important}
 #ckv{--ck:#1a5fd0;background:#fff;min-height:100vh}
@@ -256,6 +257,7 @@ small{color:var(--mut)}
 const $=s=>document.querySelector(s),R=$("#root");
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
 const f=n=>(+n).toLocaleString("en-US")+" ج.م";
+const mkref=()=>"LM-"+Array.from({length:6},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.random()*32|0]).join("");
 const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M9l49LIVJTjs4W4KmJgP0Q_Yy5FZd1r",H={apikey:SB_KEY,...(SB_KEY.startsWith("eyJ")?{Authorization:"Bearer "+SB_KEY}:{})};
 const D=JSON.parse($("#data").textContent);
 if(SB_URL&&SB_KEY)try{
@@ -337,7 +339,7 @@ function sum(){
 }
 function checkout(){
  const v=$("#ckv");
- if(done){v.innerHTML=`<div class="dn"><a class="logo" href="#">${esc(D.name)}</a><h2>شكرًا ليك!</h2><p>طلبك اتجهّز. افتح واتساب وابعت الرسالة عشان نأكده معاك.</p><a class="cb" href="${esc(done)}" target="_blank" rel="noopener">فتح واتساب</a><button class="add" data-a="back">رجوع للمتجر</button></div>`;return}
+ if(done){v.innerHTML=`<div class="dn"><a class="logo" href="#">${esc(D.name)}</a><h2>شكرًا ليك!</h2><p>تم استلام طلبك.</p><p>كود الطلب: <b dir="ltr">${esc(done)}</b></p><p>هنكلّمك على موبايلك لتأكيد الطلب والشحن. احتفظ بالكود.</p><button class="add pri" data-a="back">رجوع للمتجر</button></div>`;return}
  let inf={};try{inf=JSON.parse(localStorage.getItem("info")||"{}")}catch(e){}
  v.innerHTML=`<div class="cw"><div class="cl"><main class="cm"><a class="logo" href="#">${esc(D.name)}</a><h3>التواصل</h3><input id="ce" type="email" placeholder="البريد الإلكتروني (اختياري)" autocomplete="email"><label class="chk"><input type="checkbox"> ابعتلي الجديد والعروض على الإيميل</label><h3>التوصيل</h3><select aria-label="الدولة"><option>مصر</option></select><div class="two"><input id="fn" placeholder="الاسم الأول" autocomplete="given-name"><input id="ln2" placeholder="الاسم الأخير" autocomplete="family-name"></div><input id="fa" placeholder="العنوان" autocomplete="address-line1"><input id="fb" placeholder="شقة، دور، علامة مميزة (اختياري)"><div class="two"><input id="fc" placeholder="المدينة"><select id="fg" aria-label="المحافظة"><option value="">المحافظة</option>${GOV.map(g=>`<option>${g}</option>`).join("")}</select></div><div class="two"><input id="fz" placeholder="الرمز البريدي (اختياري)"><input id="fp" placeholder="رقم الموبايل" inputmode="tel" autocomplete="tel"></div><label class="chk"><input type="checkbox" id="sv"> احفظ بياناتي للمرة الجاية</label><h3>طريقة الشحن</h3><div class="opt on"><span><b>شحن عادي</b><br><small>${esc(D.eta||"من 3 لـ 5 أيام عمل")}</small></span><b id="sp"></b></div><h3>الدفع</h3><small>كل المعاملات آمنة.</small><label class="opt"><input type="radio" name="pm" value="cod" checked><b>الدفع عند الاستلام (COD)</b></label><label class="opt"><input type="radio" name="pm" value="card"><b>بطاقة بنكية (فيزا / ماستركارد / ميزة)</b></label><div id="cd" hidden><div class="cc" id="cc" data-b=""><div class="cc-in"><div class="cc-f"><i class="cc-c"></i><svg class="cc-x" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 7a7 7 0 0 1 0 10M12 4.5a11 11 0 0 1 0 15M16 2a15 15 0 0 1 0 20"/></svg><b class="cc-bn" id="ccb">CARD</b><p class="cc-n" id="ccn">•••• •••• •••• ••••</p><p class="cc-l">VALID THRU</p><p class="cc-d" id="ccd">MM/YY</p><p class="cc-m" id="ccm">FULL NAME</p><span class="cc-lg" id="ccl"></span></div><div class="cc-k"><div class="cc-s"></div><div class="cc-g"></div><div class="cc-v" id="ccc">•••</div></div></div></div><input id="kn" dir="ltr" inputmode="numeric" autocomplete="cc-number" placeholder="رقم البطاقة" maxlength="19"><input id="km" autocomplete="cc-name" placeholder="الاسم على البطاقة"><div class="two"><input id="ke" dir="ltr" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5"><input id="kc" dir="ltr" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV" maxlength="4"></div><small>بيانات الكارت بتتبعت لبوابة الدفع بس، ومش بتتحفظ عندنا ولا بتتبعت على واتساب.</small></div><h3>عنوان الفواتير</h3><label class="opt"><input type="radio" name="bl" value="1" checked> نفس عنوان الشحن</label><label class="opt"><input type="radio" name="bl" value="2"> استخدام عنوان فواتير مختلف</label><input id="bi" placeholder="عنوان الفواتير بالتفصيل" hidden><p id="em" class="er" role="alert"></p><div class="pbw"><button class="btn" data-a="pay" aria-label="إتمام الطلب"><span class="stars"></span><span class="background"></span><span class="order">إتمام الطلب</span><span class="done">تم</span><span class="car-container"><span class="car-part1"></span><span class="car-part2"></span><span class="wheels"></span><span class="details"></span></span><span class="package-container"><span class="package"></span><span class="package-details"></span><span class="package-text">!</span></span></button></div></main></div><div class="cr"><aside class="cs"><div id="sl"></div><div class="dc"><input id="dk" placeholder="كود الخصم" value="${esc(code)}"><button class="ap" data-a="ap">تطبيق</button></div><small id="dm"></small><div id="tl"></div></aside></div></div>`;
  IDS.forEach(i=>{if(inf[i])$("#"+i).value=inf[i]});sum();
@@ -378,11 +380,12 @@ Object.assign(A,{
  place(pr){
   const g=i=>$("#"+i).value.trim(),m=$("#em"),bill=document.querySelector('[name=bl]:checked').value=="2";
   if($("#sv").checked)try{localStorage.setItem("info",JSON.stringify(Object.fromEntries(IDS.map(i=>[i,g(i)]))))}catch(e){}
-  const d=disc(),t="طلب جديد من "+D.name+"\nالاسم: "+g("fn")+" "+g("ln2")+"\nالموبايل: "+g("fp")+(g("ce")?"\nالإيميل: "+g("ce"):"")+"\nالعنوان: "+[g("fa"),g("fb"),g("fc"),g("fg"),g("fz")].filter(Boolean).join("، ")+(bill?"\nعنوان الفواتير: "+g("bi"):"")+"\n\n"+lines().map(l=>"• "+l.p.n+(l.o?" ("+l.o+")":"")+" × "+l.n+" = "+f(l.p.p*l.n)).join("\n")+"\n\nالمجموع الفرعي: "+f(total())+(d?"\nالخصم ("+code+"): -"+f(d):"")+"\nالشحن: "+shl()+"\nالإجمالي: "+f(total()-d+ship())+" ("+(pr?"مدفوع بالكارت "+kinfo().label:"الدفع عند الاستلام")+")";
-  if(SB_URL&&SB_KEY)fetch(SB_URL+"/rest/v1/orders",{method:"POST",keepalive:true,headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({name:g("fn")+" "+g("ln2"),phone:g("fp"),email:g("ce")||null,address:[g("fa"),g("fb"),g("fc"),g("fg"),g("fz")].filter(Boolean).join("، "),items:lines().map(l=>({n:l.p.n,o:l.o,q:l.n,p:l.p.p})),subtotal:total(),discount:d,shipping:ship()||0,total:total()-d+(ship()||0),code:code||null,...(pr?{payment:"card",card_brand:kinfo().brand||null,card_last4:kinfo().last4,paid:true}:{})})}).catch(()=>{});
-  const url="https://wa.me/"+D.wa+"?text="+encodeURIComponent(t),fin=()=>{if(!document.body.classList.contains("ck"))return;done=url;cart={};savec();upd();code="";pct=0;open(url,"_blank");checkout()};
-  m.textContent="";
-  if(calm)fin();else{$(".pbw").classList.add("go");setTimeout(fin,4300)}
+  const d=disc(),ref=mkref();
+  if(A.sending)return;A.sending=true;m.textContent="جاري إرسال الطلب…";
+  fetch(SB_URL+"/rest/v1/orders",{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({ref,name:g("fn")+" "+g("ln2"),phone:g("fp"),email:g("ce")||null,address:[g("fa"),g("fb"),g("fc"),g("fg"),g("fz")].filter(Boolean).join("، ")+(bill?"، عنوان الفواتير: "+g("bi"):""),items:lines().map(l=>({n:l.p.n,o:l.o,q:l.n,p:l.p.p})),subtotal:total(),discount:d,shipping:ship()||0,total:total()-d+(ship()||0),code:code||null,...(pr?{payment:"card",card_brand:kinfo().brand||null,card_last4:kinfo().last4,paid:true}:{})})}).then(r=>{if(!r.ok)throw 0;
+   const fin=()=>{if(!document.body.classList.contains("ck"))return;done=ref;cart={};savec();upd();code="";pct=0;checkout()};
+   m.textContent="";if(calm)fin();else{$(".pbw").classList.add("go");setTimeout(fin,4300)}
+  }).catch(()=>{m.textContent="الطلب ماتبعتش. تأكد من النت وجرّب تاني."}).finally(()=>{A.sending=false})
  }
 });
 document.addEventListener("change",e=>{if(e.target.name=="bl")$("#bi").hidden=e.target.value!="2";if(e.target.id=="fg")sum()});
@@ -422,12 +425,14 @@ document.addEventListener("focusin",e=>{const c=$("#cc");if(c)c.classList.toggle
 document.addEventListener("focusout",e=>{const c=$("#cc");if(c&&e.target.id=="kc")c.classList.remove("fl")});
 document.addEventListener("change",e=>{if(e.target.name=="pm")$("#cd").hidden=e.target.value!="card"});
 const SO={
+tg:{n:"تليجرام",c:"#229ED9",v:"0 0 24 24",p:"M9.04 15.3 8.9 19.4c.4 0 .6-.2.8-.4l2-1.9 4.1 3c.8.4 1.3.2 1.5-.7L20 5.2c.3-1.2-.4-1.7-1.2-1.4L3.4 9.7c-1.1.4-1.1 1-.2 1.3l4 1.2 9.2-5.8c.4-.3.8-.1.5.2z"},
 ig:{n:"انستجرام",c:"#d62976",v:"0 0 16 16",p:"M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"},
 li:{n:"لينكدإن",c:"#0072b1",v:"0 0 448 512",p:"M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"},
 wa:{n:"واتساب",c:"#128C7E",v:"0 0 16 16",p:"M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c0 1.399.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c0-3.626 2.957-6.584 6.591-6.584a6.56 6.56 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.592 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"}};
 function lk(k,v){
  v=(v||"").trim();if(!v)return"";
  if(k=="wa"&&/^[+\d\s-]+$/.test(v))return"https://wa.me/"+v.replace(/\D/g,"").replace(/^0/,"20");
+ if(k=="tg"&&/^@?\w+$/.test(v))return"https://t.me/"+v.replace("@","");
  if(k=="ig"&&/^@?[\w.]+$/.test(v))return"https://instagram.com/"+v.replace("@","");
  v=/^https?:\/\//i.test(v)?v:"https://"+v.replace(/^\/+/,"");
  try{return new URL(v).href}catch(e){return""}
