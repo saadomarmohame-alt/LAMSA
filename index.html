@@ -532,7 +532,7 @@ const dg=t=>String(t||"").replace(/[٠-٩]/g,d=>"٠١٢٣٤٥٦٧٨٩".indexOf(d
 const odate=t=>{try{return new Date(t).toLocaleDateString("ar-EG-u-nu-latn",{day:"numeric",month:"long",year:"numeric"})}catch(e){return""}};
 const ordSaved=()=>{try{const a=JSON.parse(localStorage.getItem("ords")||"[]");return Array.isArray(a)?a.filter(x=>x&&x.r&&x.p):[]}catch(e){return[]}};
 const ordStore=a=>{try{localStorage.setItem("ords",JSON.stringify(a.slice(0,20)))}catch(e){}};
-function saveOrd(r,p){ordStore([{r,p},...ordSaved().filter(x=>x.r!=r)])}
+function saveOrd(r,p){ordStore([{r,p},...ordSaved().filter(x=>x.r!=r)]);ordHset(ordH().filter(x=>x!=r))}
 async function fetchOrd(r,p){
  try{
   let x=await fetch(SB_URL+"/rest/v1/rpc/track_order",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_ref:r,p_phone:p})});
@@ -542,10 +542,21 @@ async function fetchOrd(r,p){
   const a=await x.json();return a&&a[0]?a[0]:{err:"nf"}
  }catch(e){return{err:"net"}}
 }
+const ordH=()=>{try{const a=JSON.parse(localStorage.getItem("ordh")||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}};
+const ordHset=a=>{try{localStorage.setItem("ordh",JSON.stringify(a.slice(0,50)))}catch(e){}};
+async function fetchByPhone(p){
+ try{
+  let x=await fetch(SB_URL+"/rest/v1/rpc/track_orders_by_phone",{method:"POST",headers:{...H,"Content-Type":"application/json"},body:JSON.stringify({p_phone:p})});
+  if(x.ok){const j=await x.json();return Array.isArray(j)?j:[]}
+  x=await fetch(SB_URL+"/rest/v1/orders?phone=eq."+encodeURIComponent(p)+"&select=ref,status,created_at,items,subtotal,shipping,discount,total&order=created_at.desc&limit=10",{headers:H});
+  if(!x.ok)return[];const a=await x.json();return Array.isArray(a)?a:[]
+ }catch(e){return[]}
+}
+const myPhone=()=>{try{return JSON.parse(localStorage.getItem("info")||"{}").fp||""}catch(e){return""}};
 let OD=[],odL=false,odS="",odT=0;
 function oshell(){
  let inf={};try{inf=JSON.parse(localStorage.getItem("info")||"{}")}catch(e){}
- $("#ordv").innerHTML=`<div class="oh"><h1>طلباتي</h1><button class="obt" data-a="orf">تحديث</button></div><p class="osb">تابع حالة طلبك خطوة بخطوة.</p><details class="lk2" id="olk"${ordSaved().length?"":" open"}><summary>متابعة طلب بالكود</summary><div class="ofm"><input id="lr" dir="ltr" placeholder="كود الطلب (LM-XXXXXX)" autocomplete="off" autocapitalize="characters" aria-label="كود الطلب"><input id="lp2" dir="ltr" inputmode="tel" placeholder="رقم الموبايل" autocomplete="tel" aria-label="رقم الموبايل" value="${esc(inf.fp||"")}"><button class="obt pri" data-a="olk">تتبّع</button></div><p class="er" id="lm" role="alert"></p></details><div id="ol" aria-live="polite"></div>`;
+ $("#ordv").innerHTML=`<div class="oh"><h1>طلباتي</h1><button class="obt" data-a="orf">تحديث</button></div><p class="osb">تابع حالة طلبك خطوة بخطوة.</p><details class="lk2" id="olk"${ordSaved().length||inf.fp?"":" open"}><summary>طلبك من جهاز تاني؟ تابعه بالكود</summary><div class="ofm"><input id="lr" dir="ltr" placeholder="كود الطلب (LM-XXXXXX)" autocomplete="off" autocapitalize="characters" aria-label="كود الطلب"><input id="lp2" dir="ltr" inputmode="tel" placeholder="رقم الموبايل" autocomplete="tel" aria-label="رقم الموبايل" value="${esc(inf.fp||"")}"><button class="obt pri" data-a="olk">تتبّع</button></div><p class="er" id="lm" role="alert"></p></details><div id="ol" aria-live="polite"></div>`;
 }
 function ocard(o){
  const r=o.r,rm=`<button class="orm" data-a="orm" data-v="${esc(r)}">إخفاء من القائمة</button>`;
@@ -561,9 +572,14 @@ function paint(){
  l.innerHTML=odL&&!OD.length?`<p class="mt" role="status">جاري تحميل طلباتك…</p>`:OD.map(ocard).join("")||`<p class="mt">لسه مفيش طلبات على الجهاز ده. لو طلبت قبل كده، اكتب كود الطلب وموبايلك فوق.</p>`;
 }
 async function load(quiet){
- const t=++odT,sv=ordSaved().slice(0,10);
+ const t=++odT,sv=ordSaved(),hid=ordH();
+ const ph=[...new Set([...sv.map(x=>x.p),myPhone()])].filter(p=>/^01\d{9}$/.test(p));
  if(!quiet){odL=true;if(!OD.length)paint()}
- const res=await Promise.all(sv.map(async x=>({...x,...await fetchOrd(x.r,x.p)})));
+ const byp=await Promise.all(ph.map(async p=>({p,l:await fetchByPhone(p)}))),have={};
+ byp.forEach(x=>x.l.forEach(o=>{if(o&&o.ref&&!hid.includes(o.ref))have[o.ref]={...o,r:o.ref,p:x.p}}));
+ const rest=sv.filter(x=>!have[x.r]&&!hid.includes(x.r)).slice(0,10);
+ const more=await Promise.all(rest.map(async x=>({...x,...await fetchOrd(x.r,x.p)})));
+ const res=[...Object.values(have),...more].sort((a,b)=>String(b.created_at||"").localeCompare(String(a.created_at||"")));
  if(t!=odT)return;odL=false;
  const j=JSON.stringify(res);if(!quiet||j!=odS){OD=res;odS=j;paint()}
 }
@@ -572,7 +588,7 @@ setInterval(()=>{if(view=="o"&&!document.hidden&&!odL&&OD.some(o=>!o.err&&o.stat
 Object.assign(A,{
  orders(){done=null;document.body.classList.remove("open","menu");if(location.hash=="#orders")load();else location.hash="orders"},
  orf(){load()},
- orm(v){ordStore(ordSaved().filter(x=>x.r!=v));OD=OD.filter(x=>x.r!=v);paint()},
+ orm(v){ordStore(ordSaved().filter(x=>x.r!=v));ordHset([v,...ordH()]);OD=OD.filter(x=>x.r!=v);paint()},
  async olk(){
   const m=$("#lm");let r=dg($("#lr").value).toUpperCase().replace(/\s+/g,"");const p=dg($("#lp2").value).replace(/\D/g,"");
   if(/^[A-Z0-9]{6}$/.test(r))r="LM-"+r;
