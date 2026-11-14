@@ -508,13 +508,29 @@ header{background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-
 .mn img{transition:transform .25s}
 @media(hover:hover){.mn:hover img{transform:scale(1.8);transform-origin:var(--zx,50%) var(--zy,50%)}}
 
+
+.subs{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:2px 0 12px}.subs::-webkit-scrollbar{display:none}.subs[hidden]{display:none}
+.subs button{flex:none;border:1px solid var(--ln);border-radius:99px;background:var(--sf);color:var(--ink);padding:6px 15px;font-size:13px;font-weight:600;transition:background .2s,color .2s,border-color .2s}
+.subs button.on{background:var(--ac);color:var(--on);border-color:var(--ac)}
+@media(hover:hover){.subs button:not(.on):hover{border-color:var(--ac)}}
+.gm{width:auto;max-width:calc(100% - 20px);padding:5px;gap:2px}
+.gm button{flex:0 0 auto;min-width:68px;padding:7px 14px;gap:3px}
+.gm svg{width:1.15rem;height:1.15rem}.gm span{font-size:.7rem}
+#up{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","إكسسوارات"],"items":[{"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},{"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},{"id":3,"n":"بنطلون واسع","c":"لبس","p":390,"o":0,"opt":"S,M,L,XL","img":"","out":false},{"id":4,"n":"عباية كريب","c":"لبس","p":950,"o":1200,"opt":"52,54,56","img":"","out":false},{"id":11,"n":"شنطة كتف","c":"إكسسوارات","p":600,"o":0,"opt":"","img":"","out":false},{"id":12,"n":"حلق دائري","c":"إكسسوارات","p":120,"o":0,"opt":"","img":"","out":false}]}</script><script type="module" id="app">
 const $=s=>document.querySelector(s),R=$("#root");
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
 const f=n=>(+n).toLocaleString("en-US")+" ج.م";
 const mkref=()=>"LM-"+Array.from({length:6},()=>"ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[Math.random()*32|0]).join("");
 const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M9l49LIVJTjs4W4KmJgP0Q_Yy5FZd1r",H={apikey:SB_KEY,...(SB_KEY.startsWith("eyJ")?{Authorization:"Bearer "+SB_KEY}:{})};
-const D=JSON.parse($("#data").textContent);
+const D=JSON.parse($("#data").textContent);const KW={clothes:[["فساتين",/فستان|فساتين|جيبة|جيب/],["عبايات",/عباي|إسدال|اسدال|كارديجان/],["قمصان وتيشيرتات",/قميص|تيشيرت|تي شيرت|بلوزة|توب|هودي|سويت/],["بناطيل",/بنطلون|بنطال|جينز|ليجنز|شورت|سروال/],["جاكيتات",/جاكيت|جاكت|بالطو|معطف/],["حجاب",/حجاب|طرحة|إيشارب|ايشارب|شال|نقاب/],["أحذية",/حذاء|جزمة|صندل|شوز|كوتشي|سنيكرز/]],acc:[["شنط",/شنط|حقيب/],["ساعات",/ساع/],["نظارات",/نظار/],["مجوهرات",/خاتم|سلسل|حلق|أسورة|اسورة|دبلة|إنسيال|انسيال|عقد|مجوهر/],["أحزمة وكابات",/حزام|أحزمة|كاب|قبعة/]]};
+const gs=p=>String(p&&p.c!=null?p.c:p).split(" / ")[0];
+const ss=p=>{const c=String(p.c),i=c.indexOf(" / ");if(i>-1)return c.slice(i+3);const k=/اكس|إكس/.test(c)?KW.acc:/لبس|ملابس|هدوم/.test(c)?KW.clothes:[];const h=k.find(x=>x[1].test(p.n));return h?h[0]:""};
+const sk=p=>gs(p)+(ss(p)?" / "+ss(p):"");
+function subs(){let e=$("#subs");if(!e){e=document.createElement("div");e.id="subs";e.className="subs";$("#cs .srt").insertAdjacentElement("beforebegin",e)}
+const g=cat.split(" / ")[0],ls=[...new Set(D.items.filter(p=>gs(p)==g).map(ss).filter(Boolean))];
+e.innerHTML=g!="الكل"&&ls.length?[g,...ls.map(s=>g+" / "+s)].map(c=>`<button class="${c==cat?"on":""}" data-a="sub" data-v="${esc(c)}">${esc(c==g?"الكل":c.split(" / ")[1])}</button>`).join(""):"";e.hidden=!e.innerHTML}
+
 if(SB_URL&&SB_KEY)try{
  const[st,pr]=await Promise.all(["settings?id=eq.1&select=data","products?select=*&order=id.desc"].map(u=>fetch(SB_URL+"/rest/v1/"+u,{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()})));
  if(st[0])Object.assign(D,st[0].data);D.cats=(D.cats||[]).filter(c=>!/ميكب|مكياج|عناية|بشرة|عطور/.test(c));D.items=pr.filter(p=>!/ميكب|مكياج|عناية|بشرة|عطور/.test(p.c));lk(D.theme,D.sty,D.fnt,1);
@@ -544,11 +560,11 @@ function toast(m){let t=$("#ts");if(!t){t=document.createElement("div");t.id="ts
 const IC=["M4 4h7v7H4zM13 4h7v7h-7zM4 13h7v7H4zM13 13h7v7h-7z","M9 3 3 6l2 4 2-1v12h10V9l2 1 2-4-6-3a3 3 0 0 1-6 0z","M12 3l2.2 5.8L20 11l-5.8 2.2L12 19l-2.2-5.8L4 11l5.8-2.2z","M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11z","M7 3h10l4 6-9 12L3 9z","M12 21s-8-5-8-11a4.5 4.5 0 0 1 8-2.8A4.5 4.5 0 0 1 20 10c0 6-8 11-8 11z","M6 8h12l1 13H5zM9 8V7a3 3 0 0 1 6 0v1h-1.5V7a1.5 1.5 0 0 0-3 0v1z"];
 function tabs(){
  menu();const g=$("#gm"),x=g.scrollLeft;
- g.innerHTML=D.cats.map((c,i)=>`<button class="${c==cat?"on":""}" data-a="tab" data-v="${esc(c)}">${fi(c,i)}<span>${esc(c)}</span></button>`).join("");
- g.scrollLeft=x;
+ g.innerHTML=[...new Set(D.cats.map(gs))].map((c,i)=>`<button class="${c==cat.split(" / ")[0]?"on":""}" data-a="tab" data-v="${esc(c)}">${fi(c,i)}<span>${esc(c)}</span></button>`).join("");
+ g.scrollLeft=x;subs();
 }
 function grid(){
- let l=D.items.filter(p=>(cat=="الكل"||p.c==cat)&&(p.n+p.c).includes(q)&&(srt!="o"||p.o>p.p));if(srt=="a"||srt=="d")l=[...l].sort((a,b)=>srt=="a"?a.p-b.p:b.p-a.p);
+ let l=D.items.filter(p=>(cat=="الكل"||gs(p)==cat||sk(p)==cat)&&(p.n+p.c).includes(q)&&(srt!="o"||p.o>p.p));if(srt=="a"||srt=="d")l=[...l].sort((a,b)=>srt=="a"?a.p-b.p:b.p-a.p);
  const pn=Math.max(1,Math.ceil(l.length/PS));if(pg>=pn)pg=pn-1;
  $("#grid").innerHTML=l.slice(pg*PS,pg*PS+PS).map(p=>{const o=opts(p);
   return `<article class="it"><a class="pl" href="#p/${p.id}"><div class="ph" style="--h:${hue(p)}">${pm(p)?`<img src="${esc(src(pm(p)))}" alt="${esc(p.n)}" loading="lazy">`:`<span>${esc(p.n[0])}</span>`}${p.out?"<em>نفدت الكمية</em>":""}${X(p).bd?`<i class="bdg">${esc(X(p).bd)}</i>`:""}</div><h3>${esc(p.n)}</h3>${X(p).sd?`<p class="sdn">${esc(X(p).sd)}</p>`:""}</a><div class="pr${p.o?" s":""}"><b>${f(p.p)}</b>${p.o?`<s>${f(p.o)}</s>`:""}</div>${o.length?`<div class="op">${o.map(x=>`<button data-a="opt" data-v="${p.id}|${esc(x)}" class="${sel[p.id]==x?"on":""}${sob(p,x)?" so":""}"${sob(p,x)?` disabled aria-label="${esc(x)} (خلص)"`:""}>${esc(x)}</button>`).join("")}</div>`:""}${sws(p)}${lw(p)}${p.out?"":`<button class="ab" data-a="add" data-v="${p.id}"><span class="ab__t">أضف للسلة</span><span class="ab__i"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" class="svg p" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" stroke="currentColor" fill="none" class="svg c" aria-hidden="true"><polyline points="5 12 10 17 19 7"></polyline></svg></span></button>`}</article>`}).join("")||`<p class="mt">مفيش منتجات هنا.</p>`;
@@ -566,7 +582,7 @@ function drawer(){
 function upd(){grid();drawer();$("#cn").textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
 const A={
  tab(v){const tg=view=="h"&&v==cat&&v!="الكل";if(view!="h"){location.hash="";route()}cat=tg?"الكل":v;pg=0;tabs();grid();document.body.classList.remove("menu");const h=$("#ph"),t=h.getBoundingClientRect().top;if(t<0||t>innerHeight*.35)h.scrollIntoView({behavior:"smooth"})},
- opt(v){const j=v.indexOf("|"),i=v.slice(0,j),o=v.slice(j+1);sel[i]=sel[i]==o?"":o;grid();if(!$("#pv").hidden)pdp(find(i))},
+ sub(v){cat=v;pg=0;tabs();grid()},  opt(v){const j=v.indexOf("|"),i=v.slice(0,j),o=v.slice(j+1);sel[i]=sel[i]==o?"":o;grid();if(!$("#pv").hidden)pdp(find(i))},
  add(v){const p=find(v),e=need(p);if(e)return toast(e);const k=v+"|"+[sel[v],selc[v]].filter(Boolean).join(" · "),mx=X(p).st>0?Math.min(20,X(p).st):20;cart[k]=Math.min((cart[k]||0)+($("#pv").hidden?1:pq),mx);savec();upd();toast("اتضاف للسلة");const b=document.querySelector('.ab[data-v="'+v+'"]');if(b){void b.offsetWidth;b.classList.add("ok");clearTimeout(okT);okT=setTimeout(()=>{const x=document.querySelector('.ab[data-v="'+v+'"]');if(x)x.classList.remove("ok")},1500)}},
  qty(v){const j=v.lastIndexOf("|"),k=v.slice(0,j),n=(cart[k]||0)+ +v.slice(j+1);if(n>0)cart[k]=Math.min(n,20);else delete cart[k];savec();upd()}
 };
