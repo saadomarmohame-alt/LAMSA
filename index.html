@@ -381,17 +381,26 @@ body.chat{overflow:hidden}body.chat #ts{z-index:50}
 .pri:active{background:none;color:var(--ink)}
 :root[data-theme=red]{--ac:#c8102e;--on:#fff}
 :root[data-theme=red] #ckv{--ck:#c8102e;--ct:#fff1f3}
-:root[data-theme=ink]{--bg:#000;--sf:#141414;--ink:#fff;--mut:#a8a8a8;--ln:#333;--ph:#1c1c1c;--ac:#fff;--on:#000;--dlb:#2c2c2c;color-scheme:dark}
-:root[data-theme=ink] .it{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);box-shadow:0 14px 40px rgba(0,0,0,.6)}
-@media(hover:hover){:root[data-theme=ink] .it:hover{border-color:#fff}:root[data-theme=ink] .mi:not(.on):hover{background:rgba(255,255,255,.1)}}
-:root[data-theme=ink] .mi:not(.on):active{background:rgba(255,255,255,.1)}
-:root[data-theme=ink] .gm button.on{color:#000}
-:root[data-theme=ink] .fc{background:#141414}
-:root[data-theme=ink] #msg,:root[data-theme=ink] .pi .mt{color:#ff6b61}
-:root[data-theme=ink] #ckv{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--ph:#e6e6e6;--ck:#0a0a0a;--ct:#f2f2f2;color:#0a0a0a;color-scheme:light}
+:root[data-theme*=ink]{--bg:#000;--sf:#141414;--ink:#fff;--mut:#a8a8a8;--ln:#333;--ph:#1c1c1c;--ac:#fff;--on:#000;--dlb:#2c2c2c;color-scheme:dark}
+:root[data-theme*=ink] .it{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);box-shadow:0 14px 40px rgba(0,0,0,.6)}
+@media(hover:hover){:root[data-theme*=ink] .it:hover{border-color:#fff}:root[data-theme*=ink] .mi:not(.on):hover{background:rgba(255,255,255,.1)}}
+:root[data-theme*=ink] .mi:not(.on):active{background:rgba(255,255,255,.1)}
+:root[data-theme*=ink] .gm button.on{color:#000}
+:root[data-theme*=ink] .fc{background:#141414}
+:root[data-theme*=ink] #msg,:root[data-theme*=ink] .pi .mt{color:#ff6b61}
+:root[data-theme*=ink] #ckv{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--ph:#e6e6e6;--ck:#0a0a0a;--ct:#f2f2f2;color:#0a0a0a;color-scheme:light}
 :root[data-theme=lilac]{--bg:#f1edf7;--sf:#fbf9fe;--ink:#24133d;--mut:#6b5f8a;--ln:#d9d0ea;--ph:#e4dbf1;--ac:#6a35c2;--on:#fff}
 :root[data-theme=lilac] .it{background:rgba(255,255,255,.6);box-shadow:12px 17px 51px rgba(36,19,61,.16)}
 :root[data-theme=lilac] #ckv{--ck:#6a35c2;--ct:#f4eefc}
+
+:root[data-theme=inkred]{--ac:#e11d2e;--on:#fff}
+:root[data-theme=inkred] #ckv{--ck:#e11d2e;--ct:#fff1f3}
+@media(hover:hover){:root[data-theme=inkred] .it:hover{border-color:#e11d2e}:root[data-theme=redink] .it:hover{border-color:#000}}
+:root[data-theme=redink]{--bg:#c8102e;--sf:#8f0b20;--ln:rgba(255,255,255,.4);--ph:#a50d26;--mut:#ffe6e9;--ac:#000;--on:#fff;--dlb:#000}
+:root[data-theme=redink] #ckv{--ck:#c8102e;--ct:#fff1f3}
+:root[data-theme=redink] #msg,:root[data-theme=redink] .pi .mt{color:#fff}
+:root[data-theme=redink] .ph em,:root[data-theme=redink] .mn em{background:#000}
+:root[data-theme=redink] .fc{background:#000}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -413,7 +422,7 @@ const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M
 const D=JSON.parse($("#data").textContent);
 if(SB_URL&&SB_KEY)try{
  const[st,pr]=await Promise.all(["settings?id=eq.1&select=data","products?select=*&order=id.desc"].map(u=>fetch(SB_URL+"/rest/v1/"+u,{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()})));
- if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];{const t=["red","ink","lilac"].includes(D.theme)?D.theme:"mono";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("th",t)}catch(e){}}
+ if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];{const t=["red","ink","lilac","inkred","redink"].includes(D.theme)?D.theme:"mono";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("th",t)}catch(e){}}
 }catch(e){}
 let cat="الكل",q="",cart={},sel={},tt,okT,pg=0,pc=0;const PS=8;
 try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}

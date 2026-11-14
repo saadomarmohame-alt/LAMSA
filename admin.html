@@ -76,7 +76,7 @@ const f=n=>(+n||0).toLocaleString("en-US")+" ج.م";
 const GOV="القاهرة,الجيزة,الإسكندرية,القليوبية,الشرقية,الدقهلية,الغربية,المنوفية,البحيرة,كفر الشيخ,دمياط,بورسعيد,الإسماعيلية,السويس,شمال سيناء,جنوب سيناء,الفيوم,بني سويف,المنيا,أسيوط,سوهاج,قنا,الأقصر,أسوان,البحر الأحمر,الوادي الجديد,مطروح".split(",");
 const ST={new:"جديد",confirmed:"تم التأكيد",warehouse:"اتشحن للمستودع",shipped:"تم الشحن",done:"اتسلّم",cancel:"ملغي"},TABS={or:"الطلبات",ch:"الإحصائيات",pr:"المنتجات",sh:"الشحن",st:"الإعدادات"};
 const db=SB_URL&&SB_KEY&&window.supabase?supabase.createClient(SB_URL,SB_KEY):null;
-const THEMES=[["mono","أبيض وأسود (الحالي)","#f3f3f3","#0a0a0a","#0a0a0a"],["red","أبيض وأسود بلمسة حمرا","#f3f3f3","#0a0a0a","#c8102e"],["ink","أسود كامل","#000","#fff","#fff"],["lilac","ليلكي","#f1edf7","#24133d","#6a35c2"]];let THM="";
+const THEMES=[["mono","أبيض وأسود (الحالي)","#f3f3f3","#0a0a0a","#0a0a0a"],["red","أبيض وأسود بلمسة حمرا","#f3f3f3","#0a0a0a","#c8102e"],["ink","أسود كامل","#000","#fff","#fff"],["inkred","أسود وأحمر","#000","#fff","#e11d2e"],["redink","أحمر وأسود","#c8102e","#fff","#000"],["lilac","ليلكي","#f1edf7","#24133d","#6a35c2"]];let THM="";
 let CH={ref:null,m:[]},UN={};
 let S={name:"لمسة",wa:"",note:"",ship:60,sg:{},free:0,eta:"من 3 لـ 5 أيام عمل",codes:{},cats:[]},P=[],O=[],tab="or",ed=null,arm=null,blob=null,TG={},tt;
 const IM=v=>{if(!v)return[];if(v[0]=="[")try{return JSON.parse(v)}catch(e){}return[v]};
