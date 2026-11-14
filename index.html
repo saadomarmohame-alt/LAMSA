@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><style id="css">
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><script>(function(){try{var t=localStorage.getItem("th");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script><style id="css">
 
 :root{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--ph:#e6e6e6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -138,7 +138,7 @@ small{color:var(--mut)}
 .chk input,.opt input{width:auto}
 .opt{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #d3d3d3;border-radius:5px;padding:13px 14px;background:#fff}
 .opt:has(input){justify-content:flex-start}
-.opt.on,.opt:has(input:checked){border-color:var(--ck);background:#f0f5ff}
+.opt.on,.opt:has(input:checked){border-color:var(--ck);background:var(--ct,#f0f5ff)}
 .er{margin:0;color:#b3261e;font-size:13px}
 .cb{display:block;padding:16px;border:0;border-radius:5px;background:var(--ck);color:#fff;font-weight:700;font-size:15px;text-align:center;text-decoration:none}
 @media(hover:hover){.cb:hover{filter:brightness(.9)}}
@@ -206,7 +206,7 @@ small{color:var(--mut)}
 .li>div:first-child{flex:1;min-width:0}
 .dw{width:40px;height:40px;flex:none;transition:width .3s;-webkit-tap-highlight-color:transparent}
 .dw.arm{width:110px}
-.dl{position:relative;width:100%;height:40px;padding:0;border:0;border-radius:50px;background:var(--ink);font-weight:600;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(0,0,0,.164);cursor:pointer;transition:background .3s;overflow:hidden}
+.dl{position:relative;width:100%;height:40px;padding:0;border:0;border-radius:50px;background:var(--dlb,var(--ink));font-weight:600;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(0,0,0,.164);cursor:pointer;transition:background .3s;overflow:hidden}
 .dl .svgIcon{width:10px;transition-duration:.3s}
 .dl .svgIcon path{fill:#fff}
 .dw.arm .dl{background:#c62828}
@@ -371,6 +371,27 @@ body.chat{overflow:hidden}body.chat #ts{z-index:50}
 .rl a{flex:none;width:130px;text-decoration:none;font-size:12px;font-weight:600}
 .rl .ph{font-size:44px}
 .rt{grid-column:1/-1;margin-top:20px}
+
+:root{--ac:var(--ink);--on:var(--bg)}
+.logo{color:var(--ac)}
+.note,#cn,.pri,.op .on,.mi.on{background:var(--ac);color:var(--on)}
+.add:active{background:var(--ac);color:var(--on)}
+:focus-visible{outline-color:var(--ac)}
+@media(hover:hover){.add:hover{background:var(--ac);color:var(--on)}.it:hover{border-color:var(--ac)}.pri:hover{background:none;color:var(--ink)}}
+.pri:active{background:none;color:var(--ink)}
+:root[data-theme=red]{--ac:#c8102e;--on:#fff}
+:root[data-theme=red] #ckv{--ck:#c8102e;--ct:#fff1f3}
+:root[data-theme=ink]{--bg:#000;--sf:#141414;--ink:#fff;--mut:#a8a8a8;--ln:#333;--ph:#1c1c1c;--ac:#fff;--on:#000;--dlb:#2c2c2c;color-scheme:dark}
+:root[data-theme=ink] .it{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);box-shadow:0 14px 40px rgba(0,0,0,.6)}
+@media(hover:hover){:root[data-theme=ink] .it:hover{border-color:#fff}:root[data-theme=ink] .mi:not(.on):hover{background:rgba(255,255,255,.1)}}
+:root[data-theme=ink] .mi:not(.on):active{background:rgba(255,255,255,.1)}
+:root[data-theme=ink] .gm button.on{color:#000}
+:root[data-theme=ink] .fc{background:#141414}
+:root[data-theme=ink] #msg,:root[data-theme=ink] .pi .mt{color:#ff6b61}
+:root[data-theme=ink] #ckv{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--ph:#e6e6e6;--ck:#0a0a0a;--ct:#f2f2f2;color:#0a0a0a;color-scheme:light}
+:root[data-theme=lilac]{--bg:#f1edf7;--sf:#fbf9fe;--ink:#24133d;--mut:#6b5f8a;--ln:#d9d0ea;--ph:#e4dbf1;--ac:#6a35c2;--on:#fff}
+:root[data-theme=lilac] .it{background:rgba(255,255,255,.6);box-shadow:12px 17px 51px rgba(36,19,61,.16)}
+:root[data-theme=lilac] #ckv{--ck:#6a35c2;--ct:#f4eefc}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -392,7 +413,7 @@ const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M
 const D=JSON.parse($("#data").textContent);
 if(SB_URL&&SB_KEY)try{
  const[st,pr]=await Promise.all(["settings?id=eq.1&select=data","products?select=*&order=id.desc"].map(u=>fetch(SB_URL+"/rest/v1/"+u,{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()})));
- if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];
+ if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];{const t=["red","ink","lilac"].includes(D.theme)?D.theme:"mono";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("th",t)}catch(e){}}
 }catch(e){}
 let cat="الكل",q="",cart={},sel={},tt,okT,pg=0,pc=0;const PS=8;
 try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
