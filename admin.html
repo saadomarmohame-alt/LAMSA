@@ -17,11 +17,14 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px so
 .nav button{border:0;border-bottom:2px solid transparent;background:none;padding:10px 12px;font-weight:600;white-space:nowrap;color:var(--mut)}
 .nav .on{color:var(--ink);border-color:var(--ink)}
 .b{border:1px solid var(--ink);background:none;padding:5px 14px;font-weight:600;font-size:14px;white-space:nowrap}
-.b:hover{background:var(--ink);color:var(--bg)}
+@media(hover:hover){.b:hover{background:var(--ink);color:var(--bg)}}
+.b:active{background:var(--ink);color:var(--bg)}
 .b.p{background:var(--ink);color:#fff}
-.b.p:hover{background:none;color:var(--ink)}
+@media(hover:hover){.b.p:hover{background:none;color:var(--ink)}}
+.b.p:active{background:none;color:var(--ink)}
 .b.x{border-color:var(--er);color:var(--er)}
-.b.x:hover{background:var(--er);color:#fff}
+@media(hover:hover){.b.x:hover{background:var(--er);color:#fff}}
+.b.x:active{background:var(--er);color:#fff}
 .b:disabled{opacity:.4;cursor:default}
 h2{margin:26px 0 10px;display:flex;justify-content:space-between;align-items:center;font:700 26px/1.3 "Aref Ruqaa","Amiri",serif}
 .mt{color:var(--mut);text-align:center;padding:40px 0}
