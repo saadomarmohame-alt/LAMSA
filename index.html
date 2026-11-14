@@ -488,6 +488,25 @@ header{background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-
 .it::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(180px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--ac) 30%,transparent),transparent 70%)}
 @media(hover:hover){.it:hover::after{opacity:1}}
 #ckv{border-top:4px solid var(--ck)}#ckv .cr{background:var(--ct,#f5f5f5)}
+
+.fav{position:absolute;top:14px;inset-inline-end:14px;z-index:3;width:34px;height:34px;padding:0;border:0;border-radius:50%;display:grid;place-items:center;background:color-mix(in srgb,var(--bg) 82%,transparent);color:var(--ink);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.fav[aria-pressed=true]{background:var(--ac);color:var(--on)}.fav[aria-pressed=true] .ic{fill:currentColor}
+.fav.pop{animation:hp .35s}@keyframes hp{50%{transform:scale(1.35)}}
+.fav.pfav{position:static;width:auto;height:40px;padding:0 16px;border-radius:99px;gap:8px;display:inline-flex;align-items:center;margin-top:12px;border:1px solid var(--ln);font-weight:600;font-size:13px}
+.fb{display:inline-grid;place-items:center;min-width:16px;height:16px;border-radius:99px;background:var(--ac);color:var(--on);font-size:10px}.fb[hidden]{display:none}
+#fvs{position:fixed;inset:0;z-index:45;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.5)}
+.sh{width:100%;max-width:460px;max-height:80dvh;overflow:auto;background:var(--bg);border-radius:18px 18px 0 0;padding:16px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+@media(min-width:561px){#fvs{align-items:center}.sh{border-radius:18px}}
+.sh h3{margin:0 0 12px;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+.sh input{width:100%;padding:10px;border:1px solid var(--ln);border-radius:9px;background:var(--sf);color:var(--ink)}
+.sh .add{margin-top:10px;border-radius:9px}
+.lb2{display:grid;gap:4px;margin-bottom:10px;font-size:13px;color:var(--mut)}.szr{margin:14px 0 0;font-weight:600;line-height:1.7}
+.szb{display:inline-flex;align-items:center;gap:6px;margin-top:10px;border:0;background:none;padding:6px 0;font-weight:600;text-decoration:underline;text-underline-offset:4px;color:var(--ink)}
+.fi{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ln);text-decoration:none}
+.fi img,.fi i{width:52px;height:68px;border-radius:8px;object-fit:cover;background:var(--ph);flex:none;display:grid;place-items:center;font-style:normal}
+.fi div{flex:1;min-width:0}.fi b{display:block;font-size:13px}
+.mn img{transition:transform .25s}
+@media(hover:hover){.mn:hover img{transform:scale(1.8);transform-origin:var(--zx,50%) var(--zy,50%)}}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -842,4 +861,44 @@ let sx=0,sy=0,sw=null;
 document.addEventListener("touchstart",e=>{sw=e.target.closest(".mn[data-a]");if(sw){sx=e.touches[0].clientX;sy=e.touches[0].clientY}},{passive:true});
 document.addEventListener("touchend",e=>{if(!sw)return;sw=null;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy,bs=[...document.querySelectorAll(".tm button")],n=bs.length,g=bs.findIndex(b=>b.classList.contains("on"));if(n<2||g<0||Math.abs(dx)<40||Math.abs(dx)<Math.abs(dy)*1.5)return;A.gi(String((g+(dx>0?1:-1)+n)%n))});
 hero();tabs();upd();foot();route();
-</script><script>(function(){var d=document,sp=d.createElement("div"),up=d.createElement("button");sp.id="sp";up.id="up";up.setAttribute("aria-label","للأعلى");up.innerHTML=IC.up;d.body.append(sp,up);function sc(){var m=d.documentElement.scrollHeight-innerHeight,y=scrollY;sp.style.setProperty("--p",m>0?Math.min(1,y/m):0);up.classList.toggle("show",y>500)}addEventListener("scroll",sc,{passive:true});sc();up.onclick=function(){scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})};d.addEventListener("pointermove",function(e){var c=e.target.closest&&e.target.closest(".it");if(!c)return;var r=c.getBoundingClientRect();c.style.setProperty("--mx",e.clientX-r.left+"px");c.style.setProperty("--my",e.clientY-r.top+"px")},{passive:true})})()</script></body></html>
+</script><script>(function(){var d=document,sp=d.createElement("div"),up=d.createElement("button");sp.id="sp";up.id="up";up.setAttribute("aria-label","للأعلى");up.innerHTML=IC.up;d.body.append(sp,up);function sc(){var m=d.documentElement.scrollHeight-innerHeight,y=scrollY;sp.style.setProperty("--p",m>0?Math.min(1,y/m):0);up.classList.toggle("show",y>500)}addEventListener("scroll",sc,{passive:true});sc();up.onclick=function(){scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth"})};d.addEventListener("pointermove",function(e){var c=e.target.closest&&e.target.closest(".it");if(!c)return;var r=c.getBoundingClientRect();c.style.setProperty("--mx",e.clientX-r.left+"px");c.style.setProperty("--my",e.clientY-r.top+"px")},{passive:true})})()</script><script>(function(){
+var d=document;function $(s,r){return(r||d).querySelector(s)}function $$(s,r){return[].slice.call((r||d).querySelectorAll(s))}
+function ld(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}}function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function h(t,c,x){var e=d.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+var FV=ld("fav")||{},RV=ld("rv")||[],lastRv=null,SZ=/^(XXS|XS|S|M|L|XL|XXL|2XL|3XL|4XL)$/i;
+var HEART='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-8-4.9-8-11A4.6 4.6 0 0112 6.8 4.6 4.6 0 0120 9.5c0 6.1-8 11-8 11z"/></svg>';
+var RULER='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/></svg>';
+function sheet(title,body){var o=$("#fvs");if(o)o.remove();o=h("div");var s=h("div","sh"),hd=h("h3"),cl=h("button","ib");o.id="fvs";o.setAttribute("role","dialog");o.setAttribute("aria-modal","true");cl.type="button";cl.innerHTML=IC.x;cl.setAttribute("aria-label","إغلاق");hd.append(h("span",0,title),cl);s.append(hd,body);o.append(s);
+function k(e){if(e.key=="Escape")close()}function close(){o.remove();d.removeEventListener("keydown",k)}cl.onclick=close;o.onclick=function(e){if(e.target==o)close()};d.addEventListener("keydown",k);d.body.append(o);cl.focus()}
+function closeSheet(){var s=$("#fvs");if(s)s.remove()}
+function snapCard(c){var im=$(".ph img",c),p=$(".pr b",c);return{n:$("h3",c).textContent,p:p?p.textContent:"",i:im?im.currentSrc||im.src:""}}
+function snapPdp(){var n=$(".pi h1"),p=$(".pi .pr b"),im=$(".mn img");return{n:n?n.textContent:"",p:p?p.textContent:"",i:im?im.currentSrc||im.src:""}}
+function favBtn(id,snap,pdp){var b=h("button","fav"+(pdp?" pfav":""));b.type="button";b.dataset.id=id;b.innerHTML=HEART+(pdp?"<span></span>":"");b.setAttribute("aria-label","المفضلة");
+b.onclick=function(e){e.preventDefault();e.stopPropagation();if(FV[id])delete FV[id];else{FV[id]=snap();b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop")}sv("fav",FV);sync()};return b}
+function sync(){var n=Object.keys(FV).length,c=$("#fn");if(c){if(c.textContent!=n)c.textContent=n;if(c.hidden!=!n)c.hidden=!n}
+$$(".fav").forEach(function(b){var on=!!FV[b.dataset.id];if(b.getAttribute("aria-pressed")!=String(on))b.setAttribute("aria-pressed",on);var sp=$("span",b);if(sp){var t=on?"في المفضلة":"احفظه في المفضلة";if(sp.textContent!=t)sp.textContent=t}})}
+function openFav(){var b=h("div"),ids=Object.keys(FV);if(!ids.length)b.append(h("p","mt","لسه مفيش حاجة في المفضلة. دوس على القلب في أي منتج."));
+ids.forEach(function(id){var p=FV[id],a=h("a","fi"),im,t=h("div"),r=h("button","ib");if(p.i){im=h("img");im.src=p.i;im.alt=""}else im=h("i",0,(p.n||"")[0]||"");t.append(h("b",0,p.n),h("small",0,p.p));r.type="button";r.innerHTML=IC.x;r.setAttribute("aria-label","شيل من المفضلة");a.href="#p/"+id;a.append(im,t,r);
+r.onclick=function(e){e.preventDefault();e.stopPropagation();delete FV[id];sv("fav",FV);a.remove();sync()};a.onclick=closeSheet;b.append(a)});sheet("المفضلة",b)}
+function rec(hh,w){var s=w+(hh-170)*.35,t=[["XS",50],["S",60],["M",70],["L",80],["XL",90],["XXL",100],["3XL",112]];for(var i=0;i<t.length;i++)if(s<t[i][1])return t[i][0];return"4XL"}
+function openSize(){var b=h("div"),H=h("input"),W=h("input"),res=h("p","szr"),go=h("button","add pri");
+[[H,"الطول (سم)"],[W,"الوزن (كجم)"]].forEach(function(x){var l=h("label","lb2",x[1]);x[0].type="number";x[0].inputMode="numeric";l.append(x[0]);b.append(l)});
+go.type="button";go.textContent="احسب مقاسي";
+go.onclick=function(){var hh=+H.value,ww=+W.value;res.textContent="";if(!(hh>=120&&hh<=230&&ww>=30&&ww<=200)){res.textContent="اكتب طولك بالسنتيمتر ووزنك بالكيلو.";return}
+var z=rec(hh,ww),btn=$$(".pi .op button").filter(function(x){return x.textContent.trim().toUpperCase()==z&&!x.disabled})[0];
+res.textContent="المقاس الأنسب غالبًا: "+z+". ده تقدير تقريبي، راجع جدول المقاسات.";
+if(btn){var pk=h("button","add","اختار "+z);pk.type="button";pk.onclick=function(){closeSheet();btn.click()};res.append(pk)}else res.append(h("br"),h("small",0,"المقاس ده مش متاح حاليًا."))};
+b.append(go,res);sheet("مقاسي إيه؟",b);H.focus()}
+function sizeBtn(pi){if($(".szb",pi))return;var op=$(".op",pi);if(!op||!$$("button",op).some(function(b){return SZ.test(b.textContent.trim())}))return;var b=h("button","szb");b.type="button";b.innerHTML=RULER+" مقاسي إيه؟";b.onclick=openSize;op.insertAdjacentElement("afterend",b)}
+function recordRV(id){if(lastRv===id)return;var s=snapPdp();if(!s.n)return;lastRv=id;RV=RV.filter(function(x){return x.id!=id});RV.unshift({id:id,n:s.n,p:s.p,i:s.i});RV=RV.slice(0,8);sv("rv",RV)}
+function rv(){var home=!location.hash||location.hash=="#",cs=$("#cs"),cur=$("#rvs");if(!/^#p\//.test(location.hash))lastRv=null;
+if(!home||!RV.length||!cs){if(cur)cur.remove();return}var key=RV.map(function(x){return x.id}).join();if(cur&&cur.dataset.k==key)return;if(cur)cur.remove();
+var s=h("section","w"),r=h("div","rl");s.id="rvs";s.dataset.k=key;
+RV.forEach(function(x){var a=h("a"),p=h("div","ph");a.href="#p/"+x.id;if(x.i){var im=h("img");im.src=x.i;im.alt="";im.loading="lazy";p.append(im)}else p.append(h("span",0,(x.n||"")[0]||""));a.append(p,h("div",0,x.n));r.append(a)});
+s.append(h("h2",0,"شوفتها قريب"),r);cs.insertAdjacentElement("beforebegin",s)}
+function tick(){var hr=$(".hr");if(hr&&!$("#fvb")){var b=h("button","ib");b.id="fvb";b.type="button";b.setAttribute("aria-label","المفضلة");b.innerHTML=HEART+'<span class="fb" id="fn" hidden></span>';b.onclick=openFav;hr.prepend(b)}
+$$("#grid .it").forEach(function(c){if($(".fav",c))return;var a=$("a.pl",c),m=a&&/#p\/(\d+)/.exec(a.getAttribute("href"));if(m)c.append(favBtn(m[1],function(){return snapCard(c)}))});
+var pi=$(".pi"),m=/^#p\/(\d+)$/.exec(location.hash);if(pi&&m){if(!$(".pfav",pi)){var at=$(".shr",pi)||$("h1",pi);if(at)at.insertAdjacentElement("afterend",favBtn(m[1],snapPdp,1))}recordRV(m[1]);sizeBtn(pi)}
+rv();sync()}
+d.addEventListener("pointermove",function(e){var m=e.target.closest&&e.target.closest(".mn");if(!m)return;var r=m.getBoundingClientRect();m.style.setProperty("--zx",(e.clientX-r.left)/r.width*100+"%");m.style.setProperty("--zy",(e.clientY-r.top)/r.height*100+"%")},{passive:true});
+var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;tick()})}).observe(d.body,{childList:true,subtree:true});addEventListener("hashchange",tick);tick()})()</script></body></html>
