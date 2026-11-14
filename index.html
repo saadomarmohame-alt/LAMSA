@@ -455,6 +455,8 @@ body{font-family:var(--fb,"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,san
 :root[data-sty=polaroid] .it:nth-child(odd){transform:rotate(-1.2deg)}
 :root[data-sty=polaroid] .it:nth-child(even){transform:rotate(1.2deg)}
 @media(hover:hover){:root[data-sty=polaroid] .it:hover{transform:scale(1.05)}}
+#sbar{background:var(--ink);color:var(--bg);text-align:center;padding:7px 12px;font-size:14px}#sbar b{margin-inline-start:6px;font-variant-numeric:tabular-nums}
+.lyc{margin:14px 0;padding:14px;border:1px dashed var(--ink);text-align:center}.lyd{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0}.lyd i{width:28px;height:28px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-size:12px;font-weight:600;font-style:normal}.lyd i.on{background:var(--ink);color:var(--bg)}.lyd i.gf{border-style:dashed}.qh{margin:6px 0 0;font-size:13px;color:var(--mut)}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -478,6 +480,9 @@ if(SB_URL&&SB_KEY)try{
  const[st,pr]=await Promise.all(["settings?id=eq.1&select=data","products?select=*&order=id.desc"].map(u=>fetch(SB_URL+"/rest/v1/"+u,{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()})));
  if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];lk(D.theme,D.sty,D.fnt,1);
 }catch(e){}
+function saleBar(){const s=D.sale;if(!s||!s.t||!s.e)return;const end=new Date(s.e).getTime();if(!(end>Date.now()))return;const b=document.createElement("div");b.id="sbar";b.setAttribute("role","status");document.body.prepend(b);const z=n=>String(n).padStart(2,"0"),iv=setInterval(()=>t(),1e3),t=()=>{const d=end-Date.now();if(d<=0){b.remove();clearInterval(iv);return}const dd=Math.floor(d/864e5);b.innerHTML=esc(s.t)+" · ينتهي بعد <b dir=\"ltr\">"+(dd?dd+"d ":"")+z(Math.floor(d/36e5)%24)+":"+z(Math.floor(d/6e4)%60)+":"+z(Math.floor(d/1e3)%60)+"</b>"};t()}
+saleBar();
+document.addEventListener("input",e=>{if(e.target.id=="fp"&&D.loy&&+D.loy.n){const p=e.target.value.trim();if(/^01\d{9}$/.test(p)&&LY.p!==p)loyCheck(p)}});
 let cat="الكل",q="",cart={},sel={},tt,okT,pg=0,pc=0;const PS=8;
 try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
 const savec=()=>{try{localStorage.setItem("cart",JSON.stringify(cart))}catch(e){}};
@@ -517,7 +522,7 @@ function pager(n){
 function drawer(){
  const l=lines();
  $("#ln").innerHTML=l.map(x=>`<div class="li"><div><div>${esc(x.p.n)}${x.o?` <small>(${esc(x.o)})</small>`:""}</div><small>${f(x.p.p)}</small></div><div class="qt"><button data-a="qty" data-v="${esc(x.k)}|1" aria-label="زيادة">+</button><b>${x.n}</b><button data-a="qty" data-v="${esc(x.k)}|-1" aria-label="نقص">−</button></div><span class="dw"><button class="dl" data-a="rm" data-v="${esc(x.k)}" data-t="حذف" aria-label="حذف ${esc(x.p.n)} من السلة"><svg viewBox="0 0 448 512" class="svgIcon" aria-hidden="true"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg></button></span></div>`).join("")||`<p class="mt">السلة فاضية.</p>`;
- $("#tot").textContent=f(total());$("#co").hidden=!l.length;const r=(+D.free||0)-total();$("#fr").textContent=D.free>0?(r>0?"فاضل "+f(r)+" ويبقى الشحن مجاني":"الشحن مجاني على طلبك"):"";
+ $("#tot").textContent=f(total());$("#co").hidden=!l.length;const r=(+D.free||0)-total();$("#fr").textContent=D.free>0?(r>0?"فاضل "+f(r)+" ويبقى الشحن مجاني":"الشحن مجاني على طلبك"):"";{const h=qh();if(h&&$("#fr"))$("#fr").textContent=($("#fr").textContent?$("#fr").textContent+" · ":"")+h}
 }
 function upd(){grid();drawer();$("#cn").textContent=Object.values(cart).reduce((a,b)=>a+b,0)}
 const A={
@@ -556,14 +561,26 @@ const IDS=["ce","fn","ln2","fa","fb","fc","fg","fz","fp"];
 let code="",pct=0,done=null;
 const ship=()=>{const g=($("#fg")||{}).value;if(!g)return null;if(+D.free>0&&total()-disc()>=+D.free)return 0;const v=(D.sg||{})[g];return v==null||v===""?(D.ship==null?60:+D.ship):+v};
 const shl=()=>{const v=ship();return v==null?"اختار المحافظة":v===0?"مجاني":f(v)};
-const disc=()=>Math.round(total()*pct/100);
+let LY={};
+function qp(){const t=D.qt||{},n=lines().reduce((s,l)=>s+l.n,0);let b=0;for(const k in t)if(n>=+k&&+t[k]>b)b=+t[k];return b}
+function qh(){const t=D.qt||{},n=lines().reduce((s,l)=>s+l.n,0),ks=Object.keys(t).map(Number).filter(k=>k>n).sort((a,b)=>a-b);if(!n||!ks.length)return"";const d=ks[0]-n;return(d==1?"ضيف قطعة كمان":"ضيف "+d+" قطع")+" وخصم "+t[ks[0]]+"% يتطبق تلقائي"}
+const cdisc=()=>Math.round(total()*Math.max(pct,qp())/100);
+function ly(){if(!(D.loy&&+D.loy.n)||!LY.ok)return 0;const l=lines();if(!l.length)return 0;let v=D.loy.t=="order"?total():Math.min(...l.map(x=>x.p.p));const c=+D.loy.cap;if(c>0)v=Math.min(v,c);return Math.max(0,Math.round(v))}
+const disc=()=>Math.min(total(),cdisc()+ly());
+const isG=i=>String(i&&i.n).startsWith("🎁");
+const lyS=a=>a.filter(o=>o.status!="cancel").sort((x,y)=>new Date(y.created_at)-new Date(x.created_at));
+const lyK=a=>{let k=0;for(const o of lyS(a)){if((o.items||[]).some(isG))break;k++}return k};
+async function loyCheck(p){LY={p,ok:false};try{const a=await fetchByPhone(p);if(a)LY.ok=lyK(a)>=+D.loy.n}catch(e){}if($("#tl"))sum()}
+const lyH=(k,w)=>{const n=+D.loy.n,r=D.loy.t=="order"?"أوردر ببلاش":"قطعة ببلاش",c=Math.min(k,n);return`<div class="lyc"><b>كارت ${esc(D.name)}</b><div class="lyd">${Array.from({length:n},(_,i)=>`<i class="${i<c?"on":""}">${i<c?"✓":i+1}</i>`).join("")}<i class="gf">🎁</i></div><small>${w?"🎉 خدت مكافأتك ("+r+") على الطلب ده، وبنبدأ كارت جديد.":k>=n?"أوردرك الجاي <b>"+r+"</b> وبيتخصم تلقائي في السلة.":"فاضل <b>"+(n-k)+"</b> أوردر وتاخد <b>"+r+"</b>."}</small></div>`};
+async function lyc(){const p=myPhone();if(!$("#lyc")||!(D.loy&&+D.loy.n)||!p)return;const a=await fetchByPhone(p),e=$("#lyc");if(!a||!e)return;const m=lyS(a);e.innerHTML=lyH(lyK(a),!!(m[0]&&(m[0].items||[]).some(isG)))}
 function sum(){
+ if(D.loy&&+D.loy.n){const p=($("#fp")||{}).value;if(/^01\d{9}$/.test(p||"")&&LY.p!==p)loyCheck(p)}
  $("#sl").innerHTML=lines().map(x=>`<div class="sl"><div class="sq">${pm(x.p)?`<img src="${esc(src(pm(x.p)))}" alt="">`:`<i>${esc(x.p.n[0])}</i>`}<span class="bd">${x.n}</span></div><div><b>${esc(x.p.n)}</b>${x.o?`<br><small>${esc(x.o)}</small>`:""}</div><span>${f(x.p.p*x.n)}</span></div>`).join("");
- $("#tl").innerHTML=`<div class="tl"><span>المجموع الفرعي</span><span>${f(total())}</span></div>${pct?`<div class="tl"><span>خصم (${esc(code)})</span><span>- ${f(disc())}</span></div>`:""}<div class="tl"><span>الشحن</span><span>${shl()}</span></div><div class="tl g"><b>الإجمالي</b><b>${f(total()-disc()+(ship()||0))}</b></div>`;$("#sp").textContent=shl();
+ $("#tl").innerHTML=`<div class="tl"><span>المجموع الفرعي</span><span>${f(total())}</span></div>${cdisc()?`<div class="tl"><span>خصم (${esc(code&&pct>=qp()?code:"الكمية "+qp()+"%")})</span><span>- ${f(cdisc())}</span></div>`:""}${ly()?`<div class="tl"><span>🎁 مكافأة الولاء</span><span>- ${f(ly())}</span></div>`:""}<div class="tl"><span>الشحن</span><span>${shl()}</span></div><div class="tl g"><b>الإجمالي</b><b>${f(total()-disc()+(ship()||0))}</b></div>${qh()?`<p class="qh">${esc(qh())}</p>`:""}`;$("#sp").textContent=shl();
 }
 function checkout(){
  const v=$("#ckv");
- if(done){v.innerHTML=`<div class="dn"><a class="logo" href="#">${esc(D.name)}</a><h2>شكرًا ليك!</h2><p>تم استلام طلبك.</p><p>كود الطلب: <b dir="ltr">${esc(done)}</b></p><p>هنكلّمك على موبايلك لتأكيد الطلب والشحن. احتفظ بالكود.</p><button class="add pri" data-a="orders">تتبّع طلبك</button><button class="add" data-a="back">رجوع للمتجر</button></div>`;return}
+ if(done){v.innerHTML=`<div class="dn"><a class="logo" href="#">${esc(D.name)}</a><h2>شكرًا ليك!</h2><p>تم استلام طلبك.</p><p>كود الطلب: <b dir="ltr">${esc(done)}</b></p><p>هنكلّمك على موبايلك لتأكيد الطلب والشحن. احتفظ بالكود.</p><div id="lyc"></div><button class="add pri" data-a="orders">تتبّع طلبك</button><button class="add" data-a="back">رجوع للمتجر</button></div>`;lyc();return}
  let inf={};try{inf=JSON.parse(localStorage.getItem("info")||"{}")}catch(e){}
  v.innerHTML=`<div class="cw"><div class="cl"><main class="cm"><a class="logo" href="#">${esc(D.name)}</a><h3>التواصل</h3><input id="ce" type="email" placeholder="البريد الإلكتروني (اختياري)" autocomplete="email"><label class="chk"><input type="checkbox"> ابعتلي الجديد والعروض على الإيميل</label><h3>التوصيل</h3><select aria-label="الدولة"><option>مصر</option></select><div class="two"><input id="fn" placeholder="الاسم الأول" autocomplete="given-name"><input id="ln2" placeholder="الاسم الأخير" autocomplete="family-name"></div><input id="fa" placeholder="العنوان" autocomplete="address-line1"><input id="fb" placeholder="شقة، دور، علامة مميزة (اختياري)"><div class="two"><input id="fc" placeholder="المدينة"><select id="fg" aria-label="المحافظة"><option value="">المحافظة</option>${GOV.map(g=>`<option>${g}</option>`).join("")}</select></div><div class="two"><input id="fz" placeholder="الرمز البريدي (اختياري)"><input id="fp" placeholder="رقم الموبايل" inputmode="tel" autocomplete="tel"></div><h3>طريقة الشحن</h3><div class="opt on"><span><b>شحن عادي</b><br><small>${esc(D.eta||"من 3 لـ 5 أيام عمل")}</small></span><b id="sp"></b></div><h3>الدفع</h3><small>كل المعاملات آمنة.</small><label class="opt"><input type="radio" name="pm" value="cod" checked><b>الدفع عند الاستلام (COD)</b></label><label class="opt"><input type="radio" name="pm" value="card"><b>بطاقة بنكية (فيزا / ماستركارد / ميزة)</b></label><div id="cd" hidden><div class="cc" id="cc" data-b=""><div class="cc-in"><div class="cc-f"><i class="cc-c"></i><svg class="cc-x" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M8 7a7 7 0 0 1 0 10M12 4.5a11 11 0 0 1 0 15M16 2a15 15 0 0 1 0 20"/></svg><b class="cc-bn" id="ccb">CARD</b><p class="cc-n" id="ccn">•••• •••• •••• ••••</p><p class="cc-l">VALID THRU</p><p class="cc-d" id="ccd">MM/YY</p><p class="cc-m" id="ccm">FULL NAME</p><span class="cc-lg" id="ccl"></span></div><div class="cc-k"><div class="cc-s"></div><div class="cc-g"></div><div class="cc-v" id="ccc">•••</div></div></div></div><input id="kn" dir="ltr" inputmode="numeric" autocomplete="cc-number" placeholder="رقم البطاقة" maxlength="19"><input id="km" autocomplete="cc-name" placeholder="الاسم على البطاقة"><div class="two"><input id="ke" dir="ltr" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/YY" maxlength="5"><input id="kc" dir="ltr" type="password" inputmode="numeric" autocomplete="cc-csc" placeholder="CVV" maxlength="4"></div><small>بيانات الكارت بتتبعت لبوابة الدفع بس، ومش بتتحفظ عندنا ولا بتتبعت على واتساب.</small></div><h3>عنوان الفواتير</h3><label class="opt"><input type="radio" name="bl" value="1" checked> نفس عنوان الشحن</label><label class="opt"><input type="radio" name="bl" value="2"> استخدام عنوان فواتير مختلف</label><input id="bi" placeholder="عنوان الفواتير بالتفصيل" hidden><p id="em" class="er" role="alert"></p><div class="pbw"><button class="btn" data-a="pay" aria-label="إتمام الطلب"><span class="stars"></span><span class="background"></span><span class="order">إتمام الطلب</span><span class="done">تم</span><span class="car-container"><span class="car-part1"></span><span class="car-part2"></span><span class="wheels"></span><span class="details"></span></span><span class="package-container"><span class="package"></span><span class="package-details"></span><span class="package-text">!</span></span></button></div></main></div><div class="cr"><aside class="cs"><div id="sl"></div><div class="dc"><input id="dk" placeholder="كود الخصم" value="${esc(code)}"><button class="ap" data-a="ap">تطبيق</button></div><small id="dm"></small><div id="tl"></div></aside></div></div>`;
  IDS.forEach(i=>{if(inf[i])$("#"+i).value=inf[i]});sum();
@@ -592,12 +609,13 @@ function route(){
 }
 Object.assign(A,{
  go(){document.body.classList.remove("open");if(location.hash=="#checkout")route();else location.hash="checkout"},
- ap(){const k=$("#dk").value.trim().toUpperCase(),v=(D.codes||{})[k];code=v?k:"";pct=v||0;$("#dm").textContent=v?"":"كود الخصم غير صالح";sum()},
+ ap(){const k=$("#dk").value.trim().toUpperCase(),x=(D.cx||{})[k],ex=x&&Date.now()>new Date(x+"T23:59:59").getTime(),v=ex?0:(D.codes||{})[k];code=v?k:"";pct=v||0;$("#dm").textContent=v?"":ex?"الكود ده انتهى":"كود الخصم غير صالح";sum()},
  back(){done=null;location.hash=""},
  pay(){
   if($(".pbw.go"))return;if(lines().some(l=>l.p.out))return $("#em").textContent="في منتج في السلة نفدت كميته، احذفه من السلة الأول.";
   const g=i=>$("#"+i).value.trim(),m=$("#em"),bill=document.querySelector('[name=bl]:checked').value=="2";
   if(!g("fn")||!g("ln2")||!g("fa")||!g("fc")||!g("fg")||!/^01\d{9}$/.test(g("fp"))||(g("ce")&&!/^\S+@\S+\.\S+$/.test(g("ce")))||(bill&&!g("bi")))return m.textContent="كمّل البيانات المطلوبة: الاسم والعنوان والمدينة والمحافظة وموبايل مصري صحيح (11 رقم)، وإيميل صحيح لو كتبته.";
+  if(D.loy&&+D.loy.n&&LY.p!==g("fp")){m.textContent="لحظة…";return loyCheck(g("fp")).then(()=>{m.textContent="";A.pay()})}
   if(document.querySelector('[name=pm]:checked').value=="card"){
    if(A.busy)return;
    const er=kchk();if(er)return m.textContent=er;
@@ -612,8 +630,8 @@ Object.assign(A,{
   try{localStorage.setItem("info",JSON.stringify(Object.fromEntries(IDS.map(i=>[i,g(i)]))))}catch(e){}
   const d=disc(),ref=mkref(),ph=g("fp");
   if(A.sending)return;A.sending=true;m.textContent="جاري إرسال الطلب…";
-  fetch(SB_URL+"/rest/v1/orders",{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({ref,name:g("fn")+" "+g("ln2"),phone:g("fp"),email:g("ce")||null,address:[g("fa"),g("fb"),g("fc"),g("fg"),g("fz")].filter(Boolean).join("، ")+(bill?"، عنوان الفواتير: "+g("bi"):""),items:lines().map(l=>({n:l.p.n,o:l.o,q:l.n,p:l.p.p})),subtotal:total(),discount:d,shipping:ship()||0,total:total()-d+(ship()||0),code:code||null,...(pr?{payment:"card",card_brand:kinfo().brand||null,card_last4:kinfo().last4,paid:true}:{})})}).then(r=>{if(!r.ok)throw 0;saveOrd(ref,ph);
-   const fin=()=>{if(!document.body.classList.contains("ck"))return;done=ref;cart={};savec();upd();code="";pct=0;checkout()};
+  fetch(SB_URL+"/rest/v1/orders",{method:"POST",headers:{...H,"Content-Type":"application/json",Prefer:"return=minimal"},body:JSON.stringify({ref,name:g("fn")+" "+g("ln2"),phone:g("fp"),email:g("ce")||null,address:[g("fa"),g("fb"),g("fc"),g("fg"),g("fz")].filter(Boolean).join("، ")+(bill?"، عنوان الفواتير: "+g("bi"):""),items:[...lines().map(l=>({n:l.p.n,o:l.o,q:l.n,p:l.p.p})),...(ly()?[{n:"🎁 مكافأة الولاء",o:"",q:1,p:0}]:[])],subtotal:total(),discount:d,shipping:ship()||0,total:total()-d+(ship()||0),code:code||(ly()?"LOYALTY":null),...(pr?{payment:"card",card_brand:kinfo().brand||null,card_last4:kinfo().last4,paid:true}:{})})}).then(r=>{if(!r.ok)throw 0;saveOrd(ref,ph);
+   const fin=()=>{if(!document.body.classList.contains("ck"))return;done=ref;cart={};savec();upd();code="";pct=0;LY={};checkout()};
    m.textContent="";if(calm)fin();else{$(".pbw").classList.add("go");setTimeout(fin,4300)}
   }).catch(()=>{m.textContent="الطلب ماتبعتش. تأكد من النت وجرّب تاني."}).finally(()=>{A.sending=false})
  }
@@ -707,7 +725,7 @@ const myPhone=()=>{try{return JSON.parse(localStorage.getItem("info")||"{}").fp|
 let OD=[],odL=false,odS="",odT=0;
 function oshell(){
  let inf={};try{inf=JSON.parse(localStorage.getItem("info")||"{}")}catch(e){}
- $("#ordv").innerHTML=`<div class="oh"><h1>طلباتي</h1><button class="obt" data-a="orf">تحديث</button></div><p class="osb">تابع حالة طلبك خطوة بخطوة.</p><details class="lk2" id="olk"${ordSaved().length||inf.fp?"":" open"}><summary>طلبك من جهاز تاني؟ تابعه بالكود</summary><div class="ofm"><input id="lr" dir="ltr" placeholder="كود الطلب (LM-XXXXXX)" autocomplete="off" autocapitalize="characters" aria-label="كود الطلب"><input id="lp2" dir="ltr" inputmode="tel" placeholder="رقم الموبايل" autocomplete="tel" aria-label="رقم الموبايل" value="${esc(inf.fp||"")}"><button class="obt pri" data-a="olk">تتبّع</button></div><p class="er" id="lm" role="alert"></p></details><div id="ol" aria-live="polite"></div>`;
+ $("#ordv").innerHTML=`<div class="oh"><h1>طلباتي</h1><button class="obt" data-a="orf">تحديث</button></div><p class="osb">تابع حالة طلبك خطوة بخطوة.</p><details class="lk2" id="olk"${ordSaved().length||inf.fp?"":" open"}><summary>طلبك من جهاز تاني؟ تابعه بالكود</summary><div class="ofm"><input id="lr" dir="ltr" placeholder="كود الطلب (LM-XXXXXX)" autocomplete="off" autocapitalize="characters" aria-label="كود الطلب"><input id="lp2" dir="ltr" inputmode="tel" placeholder="رقم الموبايل" autocomplete="tel" aria-label="رقم الموبايل" value="${esc(inf.fp||"")}"><button class="obt pri" data-a="olk">تتبّع</button></div><p class="er" id="lm" role="alert"></p></details><div id="lyc"></div><div id="ol" aria-live="polite"></div>`;lyc();
 }
 function ocard(o){
  const r=o.r,rm=`<button class="orm" data-a="orm" data-v="${esc(r)}">إخفاء من القائمة</button>`;
