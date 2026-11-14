@@ -518,9 +518,6 @@ header{background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-
 .gm svg{width:1.15rem;height:1.15rem}.gm span{font-size:.7rem}
 #up{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 
-#spl{position:fixed;inset:0;z-index:60;display:grid;place-items:center;background:var(--bg);transition:opacity .4s}
-#spl .logo{font-size:64px;animation:shn 2.2s linear infinite,spp 1.4s ease-in-out infinite alternate}
-@keyframes spp{from{transform:scale(.94);opacity:.6}to{transform:scale(1);opacity:1}}
 .pct{position:absolute;top:8px;inset-inline-start:8px;z-index:2;background:#b3261e;color:#fff;font-size:11px;font-weight:700;font-style:normal;padding:2px 9px;border-radius:99px}
 .bdg~.pct{top:34px}.pct.in{position:static;margin-inline-start:8px}
 .fly{position:fixed;z-index:70;width:64px;height:64px;border-radius:14px;background:var(--ac) center/cover;pointer-events:none;box-shadow:0 8px 24px rgba(0,0,0,.35)}
@@ -529,8 +526,30 @@ header{background:color-mix(in srgb,var(--bg) 78%,transparent);-webkit-backdrop-
 #sab div{flex:1;min-width:0;display:grid;line-height:1.35}#sab b{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#sab span{font-size:12px;color:var(--mut)}
 #sab button{flex:none;border:0;border-radius:99px;background:var(--ac);color:var(--on);padding:11px 22px;font-weight:700}
 body.sab .gm{opacity:0;pointer-events:none}
-@media(prefers-reduced-motion:reduce){#spl .logo{animation:none}}
-</style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","إكسسوارات"],"items":[{"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},{"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},{"id":3,"n":"بنطلون واسع","c":"لبس","p":390,"o":0,"opt":"S,M,L,XL","img":"","out":false},{"id":4,"n":"عباية كريب","c":"لبس","p":950,"o":1200,"opt":"52,54,56","img":"","out":false},{"id":11,"n":"شنطة كتف","c":"إكسسوارات","p":600,"o":0,"opt":"","img":"","out":false},{"id":12,"n":"حلق دائري","c":"إكسسوارات","p":120,"o":0,"opt":"","img":"","out":false}]}</script><script type="module" id="app">
+
+
+@property --sr{syntax:"<percentage>";inherits:false;initial-value:0%}
+#spl{position:fixed;inset:0;z-index:60;overflow:hidden;display:grid;place-items:center;background:var(--bg);color:var(--ink);-webkit-mask:radial-gradient(circle at var(--cx,50%) var(--cy,60%),transparent var(--sr),#000 calc(var(--sr) + 1.5%));mask:radial-gradient(circle at var(--cx,50%) var(--cy,60%),transparent var(--sr),#000 calc(var(--sr) + 1.5%))}
+#spl.out{animation:s-op 1s cubic-bezier(.65,0,.25,1) forwards;pointer-events:none}
+@keyframes s-op{70%{opacity:1}to{--sr:160%;opacity:0}}
+.s-bg{position:absolute;inset:-20%;background:radial-gradient(42% 36% at 20% 18%,color-mix(in srgb,var(--ac) 55%,transparent),transparent 70%),radial-gradient(38% 32% at 85% 32%,color-mix(in srgb,var(--ac) 42%,transparent),transparent 70%),radial-gradient(48% 42% at 55% 95%,color-mix(in srgb,var(--ac) 48%,transparent),transparent 70%);filter:blur(34px);animation:aur 9s ease-in-out infinite alternate}
+.s-c{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center}
+.s-n{padding:0 .1em;font:700 clamp(72px,24vw,120px)/1.35 var(--fl,"Aref Ruqaa","Amiri",serif);background:linear-gradient(100deg,var(--ink) 40%,color-mix(in srgb,var(--ink) 25%,var(--bg)) 50%,var(--ink) 60%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:s-nm 1.1s cubic-bezier(.2,.7,.2,1) .15s both,shn 2.4s linear .15s infinite}
+@keyframes s-nm{from{opacity:0;filter:blur(18px);transform:translateY(16px) scale(.94)}to{opacity:1;filter:blur(0);transform:none}}
+.s-l{width:0;height:2px;border-radius:2px;background:var(--ac);animation:s-ln .8s cubic-bezier(.6,.05,.3,1) .8s forwards}
+@keyframes s-ln{to{width:110px}}
+.s-t{margin-top:14px;font-size:15px;font-weight:500;color:var(--mut);opacity:0;animation:s-fi .6s ease 1s forwards}
+.s-d{margin-top:38px;width:14px;height:14px;border-radius:50%;background:var(--ac);opacity:0;animation:s-fi .4s ease 1.1s forwards,s-pu 1.5s ease-out 1.1s infinite}
+@keyframes s-fi{to{opacity:1}}
+@keyframes s-pu{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--ac) 55%,transparent)}100%{box-shadow:0 0 0 28px transparent}}
+@media(prefers-reduced-motion:reduce){#spl *{animation:none!important}#spl .s-n{opacity:1}#spl .s-l{width:110px}#spl .s-t,#spl .s-d{opacity:1}#spl.out{animation:s-fd .3s forwards!important}@keyframes s-fd{to{opacity:0}}}
+</style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","إكسسوارات"],"items":[{"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},{"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},{"id":3,"n":"بنطلون واسع","c":"لبس","p":390,"o":0,"opt":"S,M,L,XL","img":"","out":false},{"id":4,"n":"عباية كريب","c":"لبس","p":950,"o":1200,"opt":"52,54,56","img":"","out":false},{"id":11,"n":"شنطة كتف","c":"إكسسوارات","p":600,"o":0,"opt":"","img":"","out":false},{"id":12,"n":"حلق دائري","c":"إكسسوارات","p":120,"o":0,"opt":"","img":"","out":false}]}</script><script>(function(){var d=document,nm="",t0=Date.now(),rm=matchMedia("(prefers-reduced-motion:reduce)").matches,min=rm?400:1500;
+try{nm=JSON.parse(d.getElementById("data").textContent).name||""}catch(e){}
+var sp=d.createElement("div");sp.id="spl";sp.setAttribute("role","status");sp.setAttribute("aria-label","جاري التحميل");
+sp.innerHTML='<div class="s-bg"></div><div class="s-c"><div class="s-n"></div><div class="s-l"></div><div class="s-t">لبس وإكسسوارات</div><div class="s-d"></div></div>';
+sp.querySelector(".s-n").textContent=nm;d.body.append(sp);
+var done=0;function go(){if(done)return;done=1;var k=sp.querySelector(".s-d").getBoundingClientRect();sp.style.setProperty("--cx",k.left+k.width/2+"px");sp.style.setProperty("--cy",k.top+k.height/2+"px");sp.classList.add("out");setTimeout(function(){sp.remove()},rm?400:1100)}
+(function chk(){var e=Date.now()-t0;if(e>9000||(d.querySelector(".hd")&&e>=min))return go();setTimeout(chk,80)})()})()</script><script type="module" id="app">
 const $=s=>document.querySelector(s),R=$("#root");
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>"&#"+c.charCodeAt(0)+";");
 const f=n=>(+n).toLocaleString("en-US")+" ج.م";
@@ -922,10 +941,6 @@ d.addEventListener("pointermove",function(e){var m=e.target.closest&&e.target.cl
 var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;tick()})}).observe(d.body,{childList:true,subtree:true});addEventListener("hashchange",tick);tick()})()</script><script>(function(){
 var d=document,rm=matchMedia("(prefers-reduced-motion:reduce)").matches;function $(s,r){return(r||d).querySelector(s)}
 function num(s){var m=String(s).replace(/[٠-٩]/g,function(c){return"٠١٢٣٤٥٦٧٨٩".indexOf(c)}).replace(/[,٬]/g,"").match(/\d+(\.\d+)?/);return m?+m[0]:0}
-if(!$(".hd")){var sp=d.createElement("div"),nm="";try{nm=JSON.parse($("#data").textContent).name}catch(e){}
-sp.id="spl";sp.innerHTML='<span class="logo"></span>';sp.firstChild.textContent=nm||"";d.body.append(sp);
-var gone=function(){if(!sp.parentNode)return;sp.style.opacity=0;setTimeout(function(){sp.remove()},420)};
-var iv=setInterval(function(){if($(".hd")){clearInterval(iv);gone()}},60);setTimeout(function(){clearInterval(iv);gone()},8000)}
 var sab=null,tgt=null,io=null;
 function sticky(){var on=$(".pi")&&/^#p\//.test(location.hash),ab=on&&$(".pi .ab");
 if(!ab){if(sab)sab.hidden=true;d.body.classList.remove("sab");if(io){io.disconnect();io=null;tgt=null}return}
