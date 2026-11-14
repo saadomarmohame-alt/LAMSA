@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><script>(function(){try{var t=localStorage.getItem("th");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}})()</script><style id="css">
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><script>(function(){var F={cairo:"Cairo:wght@400;600;700&family=Lalezar",tajawal:"Tajawal:wght@400;500;700&family=Reem+Kufi:wght@500;700",almarai:"Almarai:wght@400;700&family=Marhey:wght@600;700",amiri:"Amiri:wght@400;700"},T=["red","ink","lilac","inkred","redink","inkgold","inkpink","inkblue","inkgreen","inkviolet"],Y=["flat","soft","sharp"],h=document.documentElement;window.lk=function(t,s,f,v){t=T.indexOf(t)>-1?t:"mono";s=Y.indexOf(s)>-1?s:"glass";f=F[f]?f:"plex";h.setAttribute("data-theme",t);h.setAttribute("data-sty",s);h.setAttribute("data-fnt",f);if(F[f]){var l=document.getElementById("fnt"),u="https://fonts.googleapis.com/css2?family="+F[f]+"&display=swap";if(!l){l=document.createElement("link");l.id="fnt";l.rel="stylesheet";document.head.appendChild(l)}if(l.getAttribute("href")!=u)l.setAttribute("href",u)}if(v)try{localStorage.setItem("th",t);localStorage.setItem("sty",s);localStorage.setItem("fnt",f)}catch(e){}};try{lk(localStorage.getItem("th"),localStorage.getItem("sty"),localStorage.getItem("fnt"))}catch(e){}})()</script><style id="css">
 
 :root{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--ph:#e6e6e6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -415,6 +415,23 @@ body.chat{overflow:hidden}body.chat #ts{z-index:50}
 :root[data-theme=inkblue] #ckv{--ck:#1a5fd0;--ct:#f0f5ff}
 :root[data-theme=inkgreen] #ckv{--ck:#0b7a55;--ct:#ecfaf4}
 :root[data-theme=inkviolet] #ckv{--ck:#6a35c2;--ct:#f4eefc}
+
+body{font-family:var(--fb,"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,sans-serif)}
+.logo,.ph,.sq{font-family:var(--fl,"Aref Ruqaa","Amiri",serif)}
+.ph em,.mn em{font-family:var(--fb,"IBM Plex Sans Arabic",sans-serif)}
+:root[data-fnt=cairo]{--fb:Cairo,"IBM Plex Sans Arabic",sans-serif;--fl:Lalezar,"Aref Ruqaa",serif}
+:root[data-fnt=tajawal]{--fb:Tajawal,"IBM Plex Sans Arabic",sans-serif;--fl:"Reem Kufi","Aref Ruqaa",serif}
+:root[data-fnt=almarai]{--fb:Almarai,"IBM Plex Sans Arabic",sans-serif;--fl:Marhey,"Aref Ruqaa",serif}
+:root[data-fnt=amiri]{--fb:Amiri,"IBM Plex Sans Arabic",serif;--fl:"Aref Ruqaa",Amiri,serif}
+@media(hover:hover){:root[data-sty] .it:hover{border-color:var(--ac)}}
+:root[data-sty=flat] .it{background:var(--sf);border:1px solid var(--ln);border-radius:4px;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-sty=flat] .it .add,:root[data-sty=flat] .it .op button,:root[data-sty=flat] .ph,:root[data-sty=flat] .hm{border-radius:2px}
+:root[data-sty=soft] .it{border-radius:28px;border-color:transparent;box-shadow:0 10px 30px rgba(0,0,0,.14)}
+:root[data-sty=soft] .ph,:root[data-sty=soft] .hm{border-radius:22px}
+:root[data-sty=soft] .ph em{border-radius:0 0 22px 22px}
+:root[data-sty=soft] .add,:root[data-sty=soft] .it .op button{border-radius:99px}
+:root[data-sty=sharp] .it{background:var(--sf);border:2px solid var(--ink);border-radius:0;box-shadow:5px 5px 0 var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-sty=sharp] .it .add,:root[data-sty=sharp] .it .op button,:root[data-sty=sharp] .add,:root[data-sty=sharp] .ph,:root[data-sty=sharp] .hm,:root[data-sty=sharp] .ph em{border-radius:0}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -436,7 +453,7 @@ const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M
 const D=JSON.parse($("#data").textContent);
 if(SB_URL&&SB_KEY)try{
  const[st,pr]=await Promise.all(["settings?id=eq.1&select=data","products?select=*&order=id.desc"].map(u=>fetch(SB_URL+"/rest/v1/"+u,{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()})));
- if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];{const t=["red","ink","lilac","inkred","redink","inkgold","inkpink","inkblue","inkgreen","inkviolet"].includes(D.theme)?D.theme:"mono";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("th",t)}catch(e){}}
+ if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];lk(D.theme,D.sty,D.fnt,1);
 }catch(e){}
 let cat="الكل",q="",cart={},sel={},tt,okT,pg=0,pc=0;const PS=8;
 try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
