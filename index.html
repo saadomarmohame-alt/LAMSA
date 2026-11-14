@@ -456,7 +456,21 @@ body{font-family:var(--fb,"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,san
 :root[data-sty=polaroid] .it:nth-child(even){transform:rotate(1.2deg)}
 @media(hover:hover){:root[data-sty=polaroid] .it:hover{transform:scale(1.05)}}
 #sbar{background:var(--ink);color:var(--bg);text-align:center;padding:7px 12px;font-size:14px}#sbar b{margin-inline-start:6px;font-variant-numeric:tabular-nums}
-.lyc{margin:14px 0;padding:14px;border:1px dashed var(--ink);text-align:center}.lyd{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:10px 0}.lyd i{width:28px;height:28px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-size:12px;font-weight:600;font-style:normal}.lyd i.on{background:var(--ink);color:var(--bg)}.lyd i.gf{border-style:dashed}.qh{margin:6px 0 0;font-size:13px;color:var(--mut)}
+.lyc{margin:16px 0;padding:16px 14px 14px;text-align:center;border:1px solid var(--ln);border-radius:18px;background:var(--sf);background:linear-gradient(145deg,color-mix(in srgb,var(--ac) 10%,var(--sf)),var(--sf) 60%);box-shadow:0 8px 24px rgba(0,0,0,.08);overflow:hidden}
+:root[data-sty=sharp] .lyc,:root[data-sty=frame] .lyc,:root[data-sty=flat] .lyc{border-radius:4px}
+.lyh{display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;margin-bottom:12px;border-bottom:1px dashed var(--ln)}
+.lyh b{font-family:var(--fl,inherit);font-size:20px;line-height:1.2}
+.lyh span{font-size:12px;font-weight:600;padding:2px 10px;border-radius:99px;background:var(--ac);color:var(--on);font-variant-numeric:tabular-nums}
+.lyd{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:0 0 12px}
+.lyd i{width:34px;height:34px;border-radius:50%;border:1.5px dashed var(--ln);color:var(--mut);display:grid;place-items:center;font-size:13px;font-weight:600;font-style:normal}
+.lyd i.on{background:var(--ac);border:1.5px solid var(--ac);color:var(--on);transform:rotate(-8deg)}
+.lyd i.gf{width:40px;height:40px;font-size:20px;border:2px solid var(--ac);color:inherit}
+.lyc.rd .lyd i.gf{background:var(--ac);animation:lyp 1.6s ease-in-out infinite}
+.lyp{height:6px;border-radius:99px;background:var(--ln);overflow:hidden;margin:0 auto 10px;max-width:260px}
+.lyp span{display:block;height:100%;border-radius:inherit;background:var(--ac)}
+.lym{margin:0;font-size:14px;line-height:1.7}.lyc.rd .lym,.lyc.wn .lym{font-weight:600}
+@keyframes lyp{50%{transform:scale(1.12)}}
+@media(prefers-reduced-motion:reduce){.lyc.rd .lyd i.gf{animation:none}}.qh{margin:6px 0 0;font-size:13px;color:var(--mut)}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -571,7 +585,7 @@ const isG=i=>String(i&&i.n).startsWith("🎁");
 const lyS=a=>a.filter(o=>o.status!="cancel").sort((x,y)=>new Date(y.created_at)-new Date(x.created_at));
 const lyK=a=>{let k=0;for(const o of lyS(a)){if((o.items||[]).some(isG))break;k++}return k};
 async function loyCheck(p){LY={p,ok:false};try{const a=await fetchByPhone(p);if(a)LY.ok=lyK(a)>=+D.loy.n}catch(e){}if($("#tl"))sum()}
-const lyH=(k,w)=>{const n=+D.loy.n,r=D.loy.t=="order"?"أوردر ببلاش":"قطعة ببلاش",c=Math.min(k,n);return`<div class="lyc"><b>كارت ${esc(D.name)}</b><div class="lyd">${Array.from({length:n},(_,i)=>`<i class="${i<c?"on":""}">${i<c?"✓":i+1}</i>`).join("")}<i class="gf">🎁</i></div><small>${w?"🎉 خدت مكافأتك ("+r+") على الطلب ده، وبنبدأ كارت جديد.":k>=n?"أوردرك الجاي <b>"+r+"</b> وبيتخصم تلقائي في السلة.":"فاضل <b>"+(n-k)+"</b> أوردر وتاخد <b>"+r+"</b>."}</small></div>`};
+const lyH=(k,w)=>{const n=+D.loy.n,r=D.loy.t=="order"?"أوردر ببلاش":"قطعة ببلاش",c=Math.min(k,n),rd=k>=n&&!w;return`<div class="lyc${rd?" rd":""}${w?" wn":""}"><div class="lyh"><b>كارت ${esc(D.name)}</b><span>${c}/${n}</span></div><div class="lyd">${Array.from({length:n},(_,i)=>`<i class="${i<c?"on":""}">${i<c?"✓":i+1}</i>`).join("")}<i class="gf">🎁</i></div><div class="lyp"><span style="width:${Math.round(c/n*100)}%"></span></div><p class="lym">${w?"🎉 خدت مكافأتك ("+r+") على الطلب ده، وبنبدأ كارت جديد.":rd?"الكارت اكتمل! أوردرك الجاي <b>"+r+"</b> وبيتخصم تلقائي في السلة.":"فاضل <b>"+(n-k)+"</b> أوردر وتاخد <b>"+r+"</b>."}</p></div>`};
 async function lyc(){const p=myPhone();if(!$("#lyc")||!(D.loy&&+D.loy.n)||!p)return;const a=await fetchByPhone(p),e=$("#lyc");if(!a||!e)return;const m=lyS(a);e.innerHTML=lyH(lyK(a),!!(m[0]&&(m[0].items||[]).some(isG)))}
 function sum(){
  if(D.loy&&+D.loy.n){const p=($("#fp")||{}).value;if(/^01\d{9}$/.test(p||"")&&LY.p!==p)loyCheck(p)}
