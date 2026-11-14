@@ -393,14 +393,28 @@ body.chat{overflow:hidden}body.chat #ts{z-index:50}
 :root[data-theme=lilac] .it{background:rgba(255,255,255,.6);box-shadow:12px 17px 51px rgba(36,19,61,.16)}
 :root[data-theme=lilac] #ckv{--ck:#6a35c2;--ct:#f4eefc}
 
-:root[data-theme=inkred]{--ac:#e11d2e;--on:#fff}
-:root[data-theme=inkred] #ckv{--ck:#e11d2e;--ct:#fff1f3}
-@media(hover:hover){:root[data-theme=inkred] .it:hover{border-color:#e11d2e}:root[data-theme=redink] .it:hover{border-color:#000}}
+@media(hover:hover){:root[data-theme=redink] .it:hover{border-color:#000}}
 :root[data-theme=redink]{--bg:#c8102e;--sf:#8f0b20;--ln:rgba(255,255,255,.4);--ph:#a50d26;--mut:#ffe6e9;--ac:#000;--on:#fff;--dlb:#000}
 :root[data-theme=redink] #ckv{--ck:#c8102e;--ct:#fff1f3}
 :root[data-theme=redink] #msg,:root[data-theme=redink] .pi .mt{color:#fff}
 :root[data-theme=redink] .ph em,:root[data-theme=redink] .mn em{background:#000}
 :root[data-theme=redink] .fc{background:#000}
+
+:root[data-theme^=ink]:not([data-theme=ink]){--bg:#000;--sf:#0d0d0d;--on:#000}
+:root[data-theme^=ink]:not([data-theme=ink]) .it{border-color:var(--ln)}
+@media(hover:hover){:root[data-theme^=ink]:not([data-theme=ink]) .it:hover{border-color:var(--ac)}}
+:root[data-theme=inkred]{--ink:#ff3344;--ac:#ff3344;--mut:#d0707a;--ln:#5a1a22;--ph:#1a0709}
+:root[data-theme=inkgold]{--ink:#e9b949;--ac:#e9b949;--mut:#b99a55;--ln:#4d3d17;--ph:#171205}
+:root[data-theme=inkpink]{--ink:#ff5fae;--ac:#ff5fae;--mut:#d070a0;--ln:#561a38;--ph:#1a0a12}
+:root[data-theme=inkblue]{--ink:#4da3ff;--ac:#4da3ff;--mut:#6f9fd6;--ln:#173a5c;--ph:#08131f}
+:root[data-theme=inkgreen]{--ink:#2fe0a0;--ac:#2fe0a0;--mut:#5fb998;--ln:#14473a;--ph:#06150f}
+:root[data-theme=inkviolet]{--ink:#b794ff;--ac:#b794ff;--mut:#9c86d0;--ln:#3a2d63;--ph:#110c1f}
+:root[data-theme=inkred] #ckv{--ck:#c8102e;--ct:#fff1f3}
+:root[data-theme=inkgold] #ckv{--ck:#8a6100;--ct:#fff7e0}
+:root[data-theme=inkpink] #ckv{--ck:#c2185b;--ct:#fff0f6}
+:root[data-theme=inkblue] #ckv{--ck:#1a5fd0;--ct:#f0f5ff}
+:root[data-theme=inkgreen] #ckv{--ck:#0b7a55;--ct:#ecfaf4}
+:root[data-theme=inkviolet] #ckv{--ck:#6a35c2;--ct:#f4eefc}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
@@ -422,7 +436,7 @@ const SB_URL="https://ypxguolyfejvphialvsm.supabase.co",SB_KEY="sb_publishable_M
 const D=JSON.parse($("#data").textContent);
 if(SB_URL&&SB_KEY)try{
  const[st,pr]=await Promise.all(["settings?id=eq.1&select=data","products?select=*&order=id.desc"].map(u=>fetch(SB_URL+"/rest/v1/"+u,{headers:H}).then(r=>{if(!r.ok)throw 0;return r.json()})));
- if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];{const t=["red","ink","lilac","inkred","redink"].includes(D.theme)?D.theme:"mono";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("th",t)}catch(e){}}
+ if(st[0])Object.assign(D,st[0].data);D.items=pr;D.cats=D.cats||[];{const t=["red","ink","lilac","inkred","redink","inkgold","inkpink","inkblue","inkgreen","inkviolet"].includes(D.theme)?D.theme:"mono";document.documentElement.setAttribute("data-theme",t);try{localStorage.setItem("th",t)}catch(e){}}
 }catch(e){}
 let cat="الكل",q="",cart={},sel={},tt,okT,pg=0,pc=0;const PS=8;
 try{cart=JSON.parse(localStorage.getItem("cart")||"{}")}catch(e){}
