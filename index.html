@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><script>(function(){var F={cairo:"Cairo:wght@400;600;700&family=Lalezar",tajawal:"Tajawal:wght@400;500;700&family=Reem+Kufi:wght@500;700",almarai:"Almarai:wght@400;700&family=Marhey:wght@600;700",amiri:"Amiri:wght@400;700"},T=["red","ink","lilac","inkred","redink","inkgold","inkpink","inkblue","inkgreen","inkviolet"],Y=["flat","soft","sharp"],h=document.documentElement;window.lk=function(t,s,f,v){t=T.indexOf(t)>-1?t:"mono";s=Y.indexOf(s)>-1?s:"glass";f=F[f]?f:"plex";h.setAttribute("data-theme",t);h.setAttribute("data-sty",s);h.setAttribute("data-fnt",f);if(F[f]){var l=document.getElementById("fnt"),u="https://fonts.googleapis.com/css2?family="+F[f]+"&display=swap";if(!l){l=document.createElement("link");l.id="fnt";l.rel="stylesheet";document.head.appendChild(l)}if(l.getAttribute("href")!=u)l.setAttribute("href",u)}if(v)try{localStorage.setItem("th",t);localStorage.setItem("sty",s);localStorage.setItem("fnt",f)}catch(e){}};try{lk(localStorage.getItem("th"),localStorage.getItem("sty"),localStorage.getItem("fnt"))}catch(e){}})()</script><style id="css">
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>لمسة</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap"><script>(function(){var F={cairo:"Cairo:wght@400;600;700&family=Lalezar",tajawal:"Tajawal:wght@400;500;700&family=Reem+Kufi:wght@500;700",almarai:"Almarai:wght@400;700&family=Marhey:wght@600;700",amiri:"Amiri:wght@400;700",kufi:"Noto+Kufi+Arabic:wght@400;600;700&family=Reem+Kufi:wght@500;700",naskh:"Noto+Naskh+Arabic:wght@400;600;700",messiri:"El+Messiri:wght@400;600;700",changa:"Changa:wght@400;600;700&family=Katibeh",play:"Baloo+Bhaijaan+2:wght@400;600;700&family=Lemonada:wght@600;700",mada:"Mada:wght@400;500;700&family=Rakkas"},T=["red","ink","lilac","inkred","redink","inkgold","inkpink","inkblue","inkgreen","inkviolet","blush","mint","navy"],Y=["flat","soft","sharp","frame","arch","polaroid"],h=document.documentElement;window.lk=function(t,s,f,v){t=T.indexOf(t)>-1?t:"mono";s=Y.indexOf(s)>-1?s:"glass";f=F[f]?f:"plex";h.setAttribute("data-theme",t);h.setAttribute("data-sty",s);h.setAttribute("data-fnt",f);if(F[f]){var l=document.getElementById("fnt"),u="https://fonts.googleapis.com/css2?family="+F[f]+"&display=swap";if(!l){l=document.createElement("link");l.id="fnt";l.rel="stylesheet";document.head.appendChild(l)}if(l.getAttribute("href")!=u)l.setAttribute("href",u)}if(v)try{localStorage.setItem("th",t);localStorage.setItem("sty",s);localStorage.setItem("fnt",f)}catch(e){}};try{lk(localStorage.getItem("th"),localStorage.getItem("sty"),localStorage.getItem("fnt"))}catch(e){}})()</script><style id="css">
 
 :root{--bg:#f3f3f3;--sf:#fff;--ink:#0a0a0a;--mut:#6b6b6b;--ln:#d9d9d9;--ph:#e6e6e6;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *,*::before,*::after{box-sizing:inherit}
@@ -432,6 +432,29 @@ body{font-family:var(--fb,"IBM Plex Sans Arabic","Segoe UI",Tahoma,system-ui,san
 :root[data-sty=soft] .add,:root[data-sty=soft] .it .op button{border-radius:99px}
 :root[data-sty=sharp] .it{background:var(--sf);border:2px solid var(--ink);border-radius:0;box-shadow:5px 5px 0 var(--ink);-webkit-backdrop-filter:none;backdrop-filter:none}
 :root[data-sty=sharp] .it .add,:root[data-sty=sharp] .it .op button,:root[data-sty=sharp] .add,:root[data-sty=sharp] .ph,:root[data-sty=sharp] .hm,:root[data-sty=sharp] .ph em{border-radius:0}
+
+:root[data-fnt=kufi]{--fb:"Noto Kufi Arabic","IBM Plex Sans Arabic",sans-serif;--fl:"Reem Kufi","Aref Ruqaa",serif}
+:root[data-fnt=naskh]{--fb:"Noto Naskh Arabic","IBM Plex Sans Arabic",serif;--fl:"Aref Ruqaa",serif}
+:root[data-fnt=messiri]{--fb:"El Messiri","IBM Plex Sans Arabic",sans-serif;--fl:"El Messiri","Aref Ruqaa",serif}
+:root[data-fnt=changa]{--fb:Changa,"IBM Plex Sans Arabic",sans-serif;--fl:Katibeh,"Aref Ruqaa",serif}
+:root[data-fnt=play]{--fb:"Baloo Bhaijaan 2","IBM Plex Sans Arabic",sans-serif;--fl:Lemonada,"Aref Ruqaa",serif}
+:root[data-fnt=mada]{--fb:Mada,"IBM Plex Sans Arabic",sans-serif;--fl:Rakkas,"Aref Ruqaa",serif}
+:root[data-theme=blush]{--bg:#fbeff1;--sf:#fff8f9;--ink:#3b1220;--mut:#8a5a68;--ln:#ecd0d6;--ph:#f5dde2;--ac:#c2185b;--on:#fff}
+:root[data-theme=mint]{--bg:#eaf5ef;--sf:#f7fcf9;--ink:#10261c;--mut:#43705c;--ln:#cfe5da;--ph:#dcefe5;--ac:#0b7a55;--on:#fff}
+:root[data-theme=navy]{--bg:#eceff7;--sf:#f8f9fd;--ink:#0f1b3d;--mut:#55608a;--ln:#d3d9ea;--ph:#dfe4f2;--ac:#1f3a8a;--on:#fff}
+:root[data-theme=blush] .it,:root[data-theme=mint] .it,:root[data-theme=navy] .it{background:rgba(255,255,255,.62);box-shadow:12px 17px 51px rgba(0,0,0,.12)}
+:root[data-theme=blush] #ckv{--ck:#c2185b;--ct:#fff0f6}
+:root[data-theme=mint] #ckv{--ck:#0b7a55;--ct:#ecfaf4}
+:root[data-theme=navy] #ckv{--ck:#1f3a8a;--ct:#eef2ff}
+:root[data-sty=frame] .it{background:var(--sf);border:1px solid var(--ink);outline:1px solid var(--ink);outline-offset:-6px;border-radius:0;box-shadow:none;-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-sty=frame] .it .add,:root[data-sty=frame] .it .op button,:root[data-sty=frame] .add,:root[data-sty=frame] .ph,:root[data-sty=frame] .hm,:root[data-sty=frame] .ph em{border-radius:0}
+:root[data-sty=arch] .it{border-radius:999px 999px 6px 6px}
+:root[data-sty=arch] .ph{border-radius:999px 999px 6px 6px}
+:root[data-sty=arch] .ph em{border-radius:0}
+:root[data-sty=polaroid] .it{background:var(--sf);border:0;border-radius:3px;padding:10px 10px 18px;box-shadow:0 12px 26px rgba(0,0,0,.18);-webkit-backdrop-filter:none;backdrop-filter:none}
+:root[data-sty=polaroid] .it:nth-child(odd){transform:rotate(-1.2deg)}
+:root[data-sty=polaroid] .it:nth-child(even){transform:rotate(1.2deg)}
+@media(hover:hover){:root[data-sty=polaroid] .it:hover{transform:scale(1.05)}}
 </style></head><body><div id="root"></div><script type="application/json" id="data">{"name":"لمسة","wa":"201000000000","note":"شحن لكل المحافظات والدفع عند الاستلام","ship":60,"sg":{},"free":0,"eta":"من 3 لـ 5 أيام عمل","codes":{},"cats":["لبس","ميكب","عناية","إكسسوارات"],"items":[
 {"id":1,"n":"فستان ساتان","c":"لبس","p":850,"o":1100,"opt":"S,M,L,XL","img":"","out":false},
 {"id":2,"n":"قميص كتان أوفر سايز","c":"لبس","p":420,"o":0,"opt":"S,M,L","img":"","out":false},
